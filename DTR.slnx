@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/DTR.Api/">
+    <Project Path="DTR.Api/DTR.Api.csproj" />
+  </Folder>
+</Solution>

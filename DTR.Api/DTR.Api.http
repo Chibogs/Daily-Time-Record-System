@@ -1,0 +1,12 @@
+@DTR.Api_HostAddress = http://localhost:5240
+
+POST {{DTR.Api_HostAddress}}/api/attendance/time-in
+Accept: application/json
+
+###
+POST {{DTR.Api_HostAddress}}/api/attendance/time-out
+Accept: application/json
+
+###
+GET {{DTR.Api_HostAddress}}/api/attendance/status
+Accept: application/json
