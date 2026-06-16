@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-
+using DTR.Api.DTOs;
 namespace DTR.Api.Controllers;
 
 // [ApiController] does three things automatically:
@@ -22,10 +22,14 @@ public class AttendanceController : ControllerBase
     // [HttpPost] maps this method to: POST /api/attendance/time-in
     // The string "time-in" is appended to the base route.
     [HttpPost("time-in")]
-    public IActionResult TimeIn()
+    // IActionResult lets you return any HTTP response:
+    // Ok() = 200, Created() = 201, BadRequest() = 400, NotFound() = 404, etc.
+    public IActionResult TimeIn([FromBody] TimeInRequest request)
     {
-        // IActionResult lets you return any HTTP response:
-        // Ok() = 200, Created() = 201, BadRequest() = 400, NotFound() = 404, etc.
+        // [FromBody] tells ASP.NET Core to read the JSON request body
+        // and deserialize it into a TimeInRequest object.
+        // With [ApiController], [FromBody] is inferred — but being explicit
+        // is cleaner and easier to read for your teammates.
 
         // Placeholder response — we'll replace this with real logic in later phases
         return Ok(new { message = "Time-in recorded successfully." });
@@ -33,7 +37,7 @@ public class AttendanceController : ControllerBase
 
     // POST /api/attendance/time-out
     [HttpPost("time-out")]
-    public IActionResult RequestTimeOut()
+    public IActionResult RequestTimeOut([FromBody] TimeOutRequest request)
     {
         return Ok(new { message = "Time-out request submitted." });
     }
@@ -50,6 +54,6 @@ public class AttendanceController : ControllerBase
     public IActionResult GetHistory()
     {
         // Returning a 200 OK with a placeholder list
-        return Ok(new { message = "Attendance history retrieved.", records = Array.Empty<object>() });
+        return Ok(Array.Empty<AttendanceResponse>());
     }
 }
