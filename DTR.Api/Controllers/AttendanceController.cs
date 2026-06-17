@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using DTR.Api.DTOs;
+using DTR.Api.Services;
 namespace DTR.Api.Controllers;
 
 // [ApiController] does three things automatically:
@@ -14,6 +15,13 @@ namespace DTR.Api.Controllers;
 [Route("api/[controller]")]
 public class AttendanceController : ControllerBase
 {
+    private readonly IAttendanceService _attendanceService;
+
+    public AttendanceController(IAttendanceService attendanceService)
+    {
+        _attendanceService = attendanceService;
+    }
+
     // ControllerBase vs Controller:
     // - ControllerBase: For APIs. No View support.
     // - Controller: For MVC with Razor Views. We don't need Views in a Web API.
@@ -32,14 +40,16 @@ public class AttendanceController : ControllerBase
         // is cleaner and easier to read for your teammates.
 
         // Placeholder response — we'll replace this with real logic in later phases
-        return Ok(new { message = "Time-in recorded successfully." });
+        var result = _attendanceService.TimeIn(request);
+        return Ok(result);
     }
 
     // POST /api/attendance/time-out
     [HttpPost("time-out")]
     public IActionResult RequestTimeOut([FromBody] TimeOutRequest request)
     {
-        return Ok(new { message = "Time-out request submitted." });
+        var result = _attendanceService.RequestTimeOut(request);
+        return Ok(result);
     }
 
     // GET /api/attendance/status
@@ -50,10 +60,12 @@ public class AttendanceController : ControllerBase
     }
 
     // GET /api/attendance/history
-    [HttpGet("history")]
-    public IActionResult GetHistory()
+    [HttpGet("history/{studentId}")]
+    public IActionResult GetHistory(int studentId)
     {
-        // Returning a 200 OK with a placeholder list
-        return Ok(Array.Empty<AttendanceResponse>());
+        // [FromRoute] is inferred — studentId comes from the URL
+        // GET /api/attendance/history/1
+        var result = _attendanceService.GetHistory(studentId);
+        return Ok(result);
     }
 }
