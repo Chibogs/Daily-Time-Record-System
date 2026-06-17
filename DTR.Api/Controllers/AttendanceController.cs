@@ -27,11 +27,9 @@ public class AttendanceController : ControllerBase
     // - Controller: For MVC with Razor Views. We don't need Views in a Web API.
     // Always use ControllerBase for Web APIs.
 
-    // [HttpPost] maps this method to: POST /api/attendance/time-in
-    // The string "time-in" is appended to the base route.
+
     [HttpPost("time-in")]
-    // IActionResult lets you return any HTTP response:
-    // Ok() = 200, Created() = 201, BadRequest() = 400, NotFound() = 404, etc.
+
     public IActionResult TimeIn([FromBody] TimeInRequest request)
     {
         // [FromBody] tells ASP.NET Core to read the JSON request body
@@ -39,7 +37,7 @@ public class AttendanceController : ControllerBase
         // With [ApiController], [FromBody] is inferred — but being explicit
         // is cleaner and easier to read for your teammates.
 
-        // Placeholder response — we'll replace this with real logic in later phases
+
         var result = _attendanceService.TimeIn(request);
         return Ok(result);
     }

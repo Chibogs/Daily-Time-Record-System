@@ -8,13 +8,14 @@ public class AttendanceService : IAttendanceService
     // Think of this as a fake database for now
     private static readonly List<AttendanceResponse> _records = new();
     private static int _nextId = 1;
+    private readonly IDateTimeService _dateTimeService;
 
     public AttendanceResponse TimeIn(TimeInRequest request)
     {
         // Business Rule #1: Check if student already timed in today
         var existingRecord = _records.FirstOrDefault(r =>
             r.StudentId == request.StudentId &&
-            r.TimeIn.Date == DateTime.Today &&
+            r.TimeIn.Date == _dateTimeService.Today &&
             r.TimeOut == null);
 
         if (existingRecord != null)
@@ -30,7 +31,7 @@ public class AttendanceService : IAttendanceService
             Id = _nextId++,
             StudentId = request.StudentId,
             StudentName = $"Student {request.StudentId}", // placeholder until we have DB
-            TimeIn = DateTime.Now,
+            TimeIn = _dateTimeService.Now,
             TimeOut = null,
             TotalHours = null,
             Status = "Present"
@@ -45,7 +46,7 @@ public class AttendanceService : IAttendanceService
         // Business Rule: Find the active time-in record for this student
         var record = _records.FirstOrDefault(r =>
             r.StudentId == request.StudentId &&
-            r.TimeIn.Date == DateTime.Today &&
+            r.TimeIn.Date == _dateTimeService.Today &&
             r.TimeOut == null);
 
         if (record == null)
@@ -56,7 +57,7 @@ public class AttendanceService : IAttendanceService
         }
 
         // Business Rule: Compute total hours
-        record.TimeOut = DateTime.Now;
+        record.TimeOut = _dateTimeService.Now;
         record.TotalHours = (record.TimeOut.Value - record.TimeIn).TotalHours;
         record.Status = "Pending"; // Pending admin approval
 
