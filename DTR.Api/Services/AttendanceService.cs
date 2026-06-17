@@ -10,6 +10,11 @@ public class AttendanceService : IAttendanceService
     private static int _nextId = 1;
     private readonly IDateTimeService _dateTimeService;
 
+    public AttendanceService(IDateTimeService dateTimeService)
+    {
+        _dateTimeService = dateTimeService;
+    }
+
     public AttendanceResponse TimeIn(TimeInRequest request)
     {
         // Business Rule #1: Check if student already timed in today
