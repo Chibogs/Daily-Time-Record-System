@@ -1,4 +1,6 @@
 using DTR.Api.Services;
+using DTR.Api.Data;
+using Microsoft.EntityFrameworkCore;    
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +13,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IDateTimeService, DateTimeService>();
-
+// Register DbContext — reads connection string from appsettings.json
+// AddDbContext defaults to Scoped lifetime — correct for database contexts
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 var app = builder.Build();
 
 // 2. Enable the Swagger middleware.

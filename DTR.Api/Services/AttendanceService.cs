@@ -1,24 +1,25 @@
 using DTR.Api.DTOs;
+using DTR.Api.Entities;
+using DTR.Api.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace DTR.Api.Services;
 
 public class AttendanceService : IAttendanceService
 {
-    // Temporary in-memory list — aalisin natin to pag may database na (Phase 5)
-    // Think of this as a fake database for now
-    private static readonly List<AttendanceResponse> _records = new();
-    private static int _nextId = 1;
+    private readonly AppDbContext _dbContext;
     private readonly IDateTimeService _dateTimeService;
 
-    public AttendanceService(IDateTimeService dateTimeService)
+    public AttendanceService(AppDbContext dbContext, IDateTimeService dateTimeService)
     {
+        _dbContext = dbContext;
         _dateTimeService = dateTimeService;
     }
 
     public AttendanceResponse TimeIn(TimeInRequest request)
     {
         // Business Rule #1: Check if student already timed in today
-        var existingRecord = _records.FirstOrDefault(r =>
+        var existingRecord = _dbContext.AttendanceRecords.FirstOrDefault(r =>
             r.StudentId == request.StudentId &&
             r.TimeIn.Date == _dateTimeService.Today &&
             r.TimeOut == null);
@@ -27,29 +28,31 @@ public class AttendanceService : IAttendanceService
         {
             // We'll handle this error properly in Phase 9 (Middleware)
             // For now, just return the existing record
-            return existingRecord;
+            return MapToResponse(existingRecord);
         }
 
         // Business Rule #2: Create new attendance record
-        var record = new AttendanceResponse
+        var record = new AttendanceRecord
         {
-            Id = _nextId++,
             StudentId = request.StudentId,
-            StudentName = $"Student {request.StudentId}", // placeholder until we have DB
+            StudentName = $"Student {request.StudentId}",
             TimeIn = _dateTimeService.Now,
-            TimeOut = null,
-            TotalHours = null,
             Status = "Present"
+            // TimeOut — null by default
+            // TotalHours — null by default
+            // CreatedAt — may default value na sa entity definition
         };
 
-        _records.Add(record);
-        return record;
+        _dbContext.AttendanceRecords.Add(record);
+        _dbContext.SaveChanges();
+
+        return MapToResponse(record);
     }
 
     public AttendanceResponse RequestTimeOut(TimeOutRequest request)
     {
         // Business Rule: Find the active time-in record for this student
-        var record = _records.FirstOrDefault(r =>
+        var record = _dbContext.AttendanceRecords.FirstOrDefault(r =>
             r.StudentId == request.StudentId &&
             r.TimeIn.Date == _dateTimeService.Today &&
             r.TimeOut == null);
@@ -66,14 +69,35 @@ public class AttendanceService : IAttendanceService
         record.TotalHours = (record.TimeOut.Value - record.TimeIn).TotalHours;
         record.Status = "Pending"; // Pending admin approval
 
-        return record;
+        // EF Core tracks changes automatically — SaveChanges() runs UPDATE
+        _dbContext.SaveChanges();
+        return MapToResponse(record);
     }
 
     public IEnumerable<AttendanceResponse> GetHistory(int studentId)
     {
         // Return all records for this student, newest first
-        return _records
+        return _dbContext.AttendanceRecords
             .Where(r => r.StudentId == studentId)
-            .OrderByDescending(r => r.TimeIn);
+            .OrderByDescending(r => r.TimeIn)
+            // Map Entity to DTO directly in the query
+            .Select(r => MapToResponse(r))
+            .ToList();
+    }
+
+    // Private helper — maps Entity to DTO
+    // Controller never sees the raw Entity
+    private static AttendanceResponse MapToResponse(AttendanceRecord record)
+    {
+        return new AttendanceResponse
+        {
+            Id = record.Id,
+            StudentId = record.StudentId,
+            StudentName = record.StudentName,
+            TimeIn = record.TimeIn,
+            TimeOut = record.TimeOut,
+            TotalHours = record.TotalHours,
+            Status = record.Status
+        };
     }
 }

@@ -4,6 +4,6 @@ namespace DTR.Api.Services;
 
 public class DateTimeService : IDateTimeService
 {
-    public DateTime Now => DateTime.Now;
-    public DateTime Today => DateTime.Today;
+    public DateTime Now => DateTime.UtcNow;
+    public DateTime Today => DateTime.UtcNow.Date;
 }
