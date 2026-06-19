@@ -18,6 +18,6 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "StudentID": 123,
+    "StudentID": 1,
     "Remarks": "Feeling unwell."
 }
