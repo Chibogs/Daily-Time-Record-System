@@ -30,7 +30,7 @@ public class AttendanceController : ControllerBase
 
     [HttpPost("time-in")]
 
-    public IActionResult TimeIn([FromBody] TimeInRequest request)
+    public async Task<IActionResult> TimeIn([FromBody] TimeInRequest request)
     {
         // [FromBody] tells ASP.NET Core to read the JSON request body
         // and deserialize it into a TimeInRequest object.
@@ -38,32 +38,32 @@ public class AttendanceController : ControllerBase
         // is cleaner and easier to read for your teammates.
 
 
-        var result = _attendanceService.TimeIn(request);
+        var result = await _attendanceService.TimeIn(request);
         return Ok(result);
     }
 
     // POST /api/attendance/time-out
     [HttpPost("time-out")]
-    public IActionResult RequestTimeOut([FromBody] TimeOutRequest request)
+    public async Task<IActionResult> RequestTimeOut([FromBody] TimeOutRequest request)
     {
-        var result = _attendanceService.RequestTimeOut(request);
+        var result = await _attendanceService.RequestTimeOut(request);
         return Ok(result);
     }
 
     // GET /api/attendance/status
     [HttpGet("status")]
-    public IActionResult GetStatus()
+    public async Task<IActionResult> GetStatus()
     {
         return Ok(new { status = "Present" });
     }
 
     // GET /api/attendance/history
     [HttpGet("history/{studentId}")]
-    public IActionResult GetHistory(int studentId)
+    public async Task<IActionResult> GetHistory(int studentId)
     {
         // [FromRoute] is inferred — studentId comes from the URL
         // GET /api/attendance/history/1
-        var result = _attendanceService.GetHistory(studentId);
+        var result = await _attendanceService.GetHistory(studentId);
         return Ok(result);
     }
 }

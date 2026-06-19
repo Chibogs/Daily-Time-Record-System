@@ -1,0 +1,19 @@
+using DTR.Api.Entities;
+
+namespace DTR.Api.Repositories;
+
+public interface IAttendanceRepository
+{
+    // Find an active time-in record for a student today
+    // Returns null if none found
+    Task<AttendanceRecord?> GetActiveRecordAsync(int studentId, DateTime today);
+
+    // Get all records for a student, ordered by TimeIn descending
+    Task<IEnumerable<AttendanceRecord>> GetHistoryAsync(int studentId);
+
+    // Insert a new record into the database
+    Task<AttendanceRecord> AddAsync(AttendanceRecord record);
+
+    // Save changes to an existing tracked record
+    Task UpdateAsync(AttendanceRecord record);
+}

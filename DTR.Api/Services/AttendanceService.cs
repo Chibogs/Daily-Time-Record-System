@@ -1,28 +1,25 @@
 using DTR.Api.DTOs;
 using DTR.Api.Entities;
-using DTR.Api.Data;
-using Microsoft.EntityFrameworkCore;
+using DTR.Api.Repositories;
 
 namespace DTR.Api.Services;
 
 public class AttendanceService : IAttendanceService
 {
-    private readonly AppDbContext _dbContext;
+    private readonly IAttendanceRepository _repository;
     private readonly IDateTimeService _dateTimeService;
 
-    public AttendanceService(AppDbContext dbContext, IDateTimeService dateTimeService)
+    public AttendanceService(IAttendanceRepository repository, IDateTimeService dateTimeService)
     {
-        _dbContext = dbContext;
+        _repository = repository;
         _dateTimeService = dateTimeService;
     }
 
-    public AttendanceResponse TimeIn(TimeInRequest request)
+    public async Task<AttendanceResponse> TimeIn(TimeInRequest request)
     {
         // Business Rule #1: Check if student already timed in today
-        var existingRecord = _dbContext.AttendanceRecords.FirstOrDefault(r =>
-            r.StudentId == request.StudentId &&
-            r.TimeIn.Date == _dateTimeService.Today &&
-            r.TimeOut == null);
+        var existingRecord = await _repository.GetActiveRecordAsync(request.StudentId, _dateTimeService.Today);
+
 
         if (existingRecord != null)
         {
@@ -43,19 +40,17 @@ public class AttendanceService : IAttendanceService
             // CreatedAt — may default value na sa entity definition
         };
 
-        _dbContext.AttendanceRecords.Add(record);
-        _dbContext.SaveChanges();
-
-        return MapToResponse(record);
+        var saved = await _repository.AddAsync(record);
+        return MapToResponse(saved);
     }
 
-    public AttendanceResponse RequestTimeOut(TimeOutRequest request)
+    public async Task<AttendanceResponse> RequestTimeOut(TimeOutRequest request)
     {
         // Business Rule: Find the active time-in record for this student
-        var record = _dbContext.AttendanceRecords.FirstOrDefault(r =>
-            r.StudentId == request.StudentId &&
-            r.TimeIn.Date == _dateTimeService.Today &&
-            r.TimeOut == null);
+        var record = await _repository.GetActiveRecordAsync(
+            request.StudentId, 
+            _dateTimeService.Today);
+
 
         if (record == null)
         {
@@ -70,19 +65,14 @@ public class AttendanceService : IAttendanceService
         record.Status = "Pending"; // Pending admin approval
 
         // EF Core tracks changes automatically — SaveChanges() runs UPDATE
-        _dbContext.SaveChanges();
+        await _repository.UpdateAsync(record);
         return MapToResponse(record);
     }
 
-    public IEnumerable<AttendanceResponse> GetHistory(int studentId)
+    public async Task<IEnumerable<AttendanceResponse>> GetHistory(int studentId)
     {
-        // Return all records for this student, newest first
-        return _dbContext.AttendanceRecords
-            .Where(r => r.StudentId == studentId)
-            .OrderByDescending(r => r.TimeIn)
-            // Map Entity to DTO directly in the query
-            .Select(r => MapToResponse(r))
-            .ToList();
+        var records = await _repository.GetHistoryAsync(studentId);
+        return records.Select(r => MapToResponse(r));
     }
 
     // Private helper — maps Entity to DTO

@@ -1,6 +1,7 @@
 using DTR.Api.Services;
 using DTR.Api.Data;
 using Microsoft.EntityFrameworkCore;    
+using DTR.Api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddControllers();
 // This discovers the API endpoints and generates the OpenAPI specification.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IDateTimeService, DateTimeService>();
 // Register DbContext — reads connection string from appsettings.json
