@@ -7,7 +7,11 @@ Content-Type: application/json
 {
     "StudentID": 1
 }
-    
+
+###
+GET {{DTR.Api_HostAddress}}/api/attendance/history/1
+Accept: application/json
+
 ###
 POST {{DTR.Api_HostAddress}}/api/attendance/time-out
 Accept: application/json
@@ -17,7 +21,3 @@ Content-Type: application/json
     "StudentID": 123,
     "Remarks": "Feeling unwell."
 }
-
-###
-GET {{DTR.Api_HostAddress}}/api/attendance/history/1
-Accept: application/json
