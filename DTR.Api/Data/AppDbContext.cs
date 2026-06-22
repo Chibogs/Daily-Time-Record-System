@@ -15,6 +15,9 @@ public class AppDbContext : DbContext
     // EF Core will create an "AttendanceRecords" table based on this
     public DbSet<AttendanceRecord> AttendanceRecords { get; set; }
 
+    // DbSet for the User entity
+    public DbSet<User> Users { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Explicitly configure the table name
@@ -35,5 +38,26 @@ public class AppDbContext : DbContext
             // Index for faster queries — we'll frequently query by StudentId
             entity.HasIndex(e => e.StudentId);
         });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.ToTable("users");
+            
+            // Username must be unique — no two users with same username
+            entity.HasIndex(e => e.Username).IsUnique();
+
+            entity.Property(e => e.Username)
+                  .IsRequired()
+                  .HasMaxLength(50);
+            entity.Property(e => e.PasswordHash)
+                  .IsRequired();
+            entity.Property(e => e.Role)
+                  .IsRequired()
+                  .HasMaxLength(20);
+            entity.Property(e => e.FullName)
+                  .IsRequired()
+                  .HasMaxLength(100);
+        });
+
     }
 }
