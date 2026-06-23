@@ -15,10 +15,10 @@ public class AttendanceService : IAttendanceService
         _dateTimeService = dateTimeService;
     }
 
-    public async Task<AttendanceResponse> TimeIn(TimeInRequest request)
+    public async Task<AttendanceResponse> TimeIn(int userId)
     {
         // Business Rule #1: Check if student already timed in today
-        var existingRecord = await _repository.GetActiveRecordAsync(request.StudentId, _dateTimeService.Today);
+        var existingRecord = await _repository.GetActiveRecordAsync(userId, _dateTimeService.Today);
 
 
         if (existingRecord != null)
@@ -31,8 +31,8 @@ public class AttendanceService : IAttendanceService
         // Business Rule #2: Create new attendance record
         var record = new AttendanceRecord
         {
-            StudentId = request.StudentId,
-            StudentName = $"Student {request.StudentId}",
+            StudentId = userId,
+            StudentName = $"Student {userId}",
             TimeIn = _dateTimeService.Now,
             Status = "Present"
             // TimeOut — null by default
@@ -44,11 +44,11 @@ public class AttendanceService : IAttendanceService
         return MapToResponse(saved);
     }
 
-    public async Task<AttendanceResponse> RequestTimeOut(TimeOutRequest request)
+    public async Task<AttendanceResponse> RequestTimeOut(int userId, string? remarks)
     {
         // Business Rule: Find the active time-in record for this student
         var record = await _repository.GetActiveRecordAsync(
-            request.StudentId, 
+            userId, 
             _dateTimeService.Today);
 
 

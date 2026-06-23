@@ -21,3 +21,12 @@ Content-Type: application/json
     "StudentID": 1,
     "Remarks": "Feeling unwell."
 }
+
+###
+POST {{DTR.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "password123"
+}

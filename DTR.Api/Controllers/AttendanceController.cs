@@ -1,6 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using DTR.Api.DTOs;
 using DTR.Api.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
 namespace DTR.Api.Controllers;
 
 // [ApiController] does three things automatically:
@@ -13,6 +16,7 @@ namespace DTR.Api.Controllers;
 // [controller] is a token that gets replaced by the class name minus "Controller"
 // So "AttendanceController" becomes "/api/attendance"
 [Route("api/[controller]")]
+[Authorize] // This attribute ensures that all endpoints in this controller require token. If a request is made without a valid token, it will return 401 Unauthorized.
 public class AttendanceController : ControllerBase
 {
     private readonly IAttendanceService _attendanceService;
@@ -29,8 +33,8 @@ public class AttendanceController : ControllerBase
 
 
     [HttpPost("time-in")]
-
-    public async Task<IActionResult> TimeIn([FromBody] TimeInRequest request)
+    [Authorize(Roles = "Student")] 
+    public async Task<IActionResult> TimeIn()
     {
         // [FromBody] tells ASP.NET Core to read the JSON request body
         // and deserialize it into a TimeInRequest object.
@@ -38,15 +42,33 @@ public class AttendanceController : ControllerBase
         // is cleaner and easier to read for your teammates.
 
 
-        var result = await _attendanceService.TimeIn(request);
+        // Read userId from JWT token — hindi na galing sa request body
+        // User.FindFirstValue() reads claims from the token
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userIdClaim == null)
+        {
+            return Unauthorized(new { error = "User ID claim not found" });
+        }
+
+        var userId = int.Parse(userIdClaim);
+        var result = await _attendanceService.TimeIn(userId);
         return Ok(result);
     }
 
     // POST /api/attendance/time-out
     [HttpPost("time-out")]
+    [Authorize(Roles = "Student")]
     public async Task<IActionResult> RequestTimeOut([FromBody] TimeOutRequest request)
     {
-        var result = await _attendanceService.RequestTimeOut(request);
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userIdClaim == null)
+        {
+            return Unauthorized(new { error = "User ID claim not found" });
+        }
+        var userId = int.Parse(userIdClaim);
+        var result = await _attendanceService.RequestTimeOut(userId, request.Remarks);
         return Ok(result);
     }
 
@@ -59,11 +81,22 @@ public class AttendanceController : ControllerBase
 
     // GET /api/attendance/history
     [HttpGet("history/{studentId}")]
+    [Authorize(Roles = "Student")]
     public async Task<IActionResult> GetHistory(int studentId)
     {
         // [FromRoute] is inferred — studentId comes from the URL
         // GET /api/attendance/history/1
-        var result = await _attendanceService.GetHistory(studentId);
+
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userIdClaim == null)
+        {
+            return Unauthorized(new { error = "User ID claim not found" });
+        }
+
+        var userId = int.Parse(userIdClaim);
+
+        var result = await _attendanceService.GetHistory(userId);
         return Ok(result);
     }
 }
