@@ -1,6 +1,7 @@
 using DTR.Api.DTOs;
 using DTR.Api.Entities;
 using DTR.Api.Repositories;
+using DTR.Api.Exceptions;
 
 namespace DTR.Api.Services;
 
@@ -23,9 +24,9 @@ public class AttendanceService : IAttendanceService
 
         if (existingRecord != null)
         {
-            // We'll handle this error properly in Phase 9 (Middleware)
-            // For now, just return the existing record
-            return MapToResponse(existingRecord);
+            // Can't time in again if already timed in today
+            // ConflictException is a custom exception(/Exceptions/ConflictException.cs) that maps to HTTP 409 Conflict
+            throw new ConflictException("Student has already timed in today.");
         }
 
         // Business Rule #2: Create new attendance record
@@ -55,8 +56,8 @@ public class AttendanceService : IAttendanceService
         if (record == null)
         {
             // Can't time out if never timed in
-            // Proper error handling in Phase 9
-            throw new InvalidOperationException("No active time-in record found.");
+            // NotFoundException is a custom exception(/Exceptions/NotFoundException.cs) that maps to HTTP 404 Not Found
+            throw new NotFoundException("No active time-in record found.");
         }
 
         // Business Rule: Compute total hours
