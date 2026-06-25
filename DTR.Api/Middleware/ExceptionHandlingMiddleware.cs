@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using DTR.Api.DTOs;
-using DTR.Api.Exceptions;
+using DTR.Domain.Exceptions;
 
 namespace DTR.Api.Middleware;
 

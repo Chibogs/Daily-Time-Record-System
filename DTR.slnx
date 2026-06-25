@@ -2,4 +2,7 @@
   <Folder Name="/DTR.Api/">
     <Project Path="DTR.Api/DTR.Api.csproj" />
   </Folder>
+  <Project Path="DTR.Application/DTR.Application.csproj" />
+  <Project Path="DTR.Domain/DTR.Domain.csproj" />
+  <Project Path="DTR.Infrastructure/DTR.Infrastructure.csproj" />
 </Solution>

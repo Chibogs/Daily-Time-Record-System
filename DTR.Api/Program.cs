@@ -1,11 +1,14 @@
-using DTR.Api.Data;
-using DTR.Api.Repositories;
-using DTR.Api.Services;
+using DTR.Api.Middleware;
+using DTR.Application.Interfaces;
+using DTR.Application.Services;
+using DTR.Infrastructure.Data;
+using DTR.Infrastructure.Repositories;
+using DTR.Infrastructure.Services;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using DTR.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,19 +16,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Database
+// Database - Infrastructure
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Services
+// Repositories - Infrastructure implements Application interfaces
 builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// Services - Application layer
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<IDateTimeService, DateTimeService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-
-// JwtService is stateless — Singleton is correct here
-builder.Services.AddSingleton<IJwtService, JwtService>();
+builder.Services.AddSingleton<IJwtService, JwtService>(); // JwtService is stateless — Singleton is correct here
 
 // JWT Authentication
 var secretKey = builder.Configuration["JwtSettings:SecretKey"]!;
