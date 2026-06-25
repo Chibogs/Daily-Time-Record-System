@@ -9,11 +9,14 @@ public class AttendanceService : IAttendanceService
 {
     private readonly IAttendanceRepository _repository;
     private readonly IDateTimeService _dateTimeService;
+    private readonly IUserRepository _userRepository;
 
-    public AttendanceService(IAttendanceRepository repository, IDateTimeService dateTimeService)
+
+    public AttendanceService(IAttendanceRepository repository, IDateTimeService dateTimeService, IUserRepository userRepository)
     {
         _repository = repository;
         _dateTimeService = dateTimeService;
+        _userRepository = userRepository;
     }
 
     public async Task<AttendanceResponse> TimeIn(int userId)
@@ -29,11 +32,18 @@ public class AttendanceService : IAttendanceService
             throw new ConflictException("Student has already timed in today.");
         }
 
+        var user = await _userRepository.GetUserByIdAsync(userId);
+
+        if (user == null)
+        {
+            throw new NotFoundException("User not found.");
+        }
+
         // Business Rule #2: Create new attendance record
         var record = new AttendanceRecord
         {
             StudentId = userId,
-            StudentName = $"Student {userId}",
+            StudentName = user.FullName,
             TimeIn = _dateTimeService.Now,
             Status = "Present"
             // TimeOut — null by default
