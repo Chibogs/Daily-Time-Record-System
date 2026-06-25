@@ -1,5 +1,6 @@
 @DTR.Api_HostAddress = http://localhost:5240
 
+### Time-in with body student ID 1, which corresponds to "Juan dela Cruz" in our seeded data
 POST {{DTR.Api_HostAddress}}/api/attendance/time-in
 Accept: application/json
 Content-Type: application/json
@@ -22,7 +23,7 @@ Content-Type: application/json
     "Remarks": "Feeling unwell."
 }
 
-###
+### admin
 POST {{DTR.Api_HostAddress}}/api/auth/login
 Content-Type: application/json
 
@@ -30,3 +31,29 @@ Content-Type: application/json
     "username": "admin",
     "password": "password123"
 }
+
+### Time-out without time-in — mag-tthrow ng exception
+POST {{DTR.Api_HostAddress}}/api/attendance/time-out
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3R1ZGVudDEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJTdHVkZW50IiwiZnVsbE5hbWUiOiJKdWFuIGRlbGEgQ3J1eiIsImV4cCI6MTc4MjI3MDQ1NCwiaXNzIjoiRFRSLkFwaSIsImF1ZCI6IkRUUi5DbGllbnQifQ.STe6lymgVBRi5lXYe_cOBq6jO4o_DDYzVKx-Mi_TVHM
+Content-Type: application/json
+
+{
+    "remarks": "test"
+}
+
+### Login
+POST {{DTR.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "student1",
+    "password": "student123"
+}
+
+### Time-in student
+POST {{DTR.Api_HostAddress}}/api/attendance/time-in
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3R1ZGVudDEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJTdHVkZW50IiwiZnVsbE5hbWUiOiJKdWFuIGRlbGEgQ3J1eiIsImV4cCI6MTc4MjM1ODQ0NywiaXNzIjoiRFRSLkFwaSIsImF1ZCI6IkRUUi5DbGllbnQifQ.vnRygAq_d9X_XU7yfVS20SFwoioq2JUrcAwyGwD_2WM
+
+### Time-in student
+GET {{DTR.Api_HostAddress}}/api/attendance/history
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoic3R1ZGVudDEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJTdHVkZW50IiwiZnVsbE5hbWUiOiJKdWFuIGRlbGEgQ3J1eiIsImV4cCI6MTc4MjM1ODQ0NywiaXNzIjoiRFRSLkFwaSIsImF1ZCI6IkRUUi5DbGllbnQifQ.vnRygAq_d9X_XU7yfVS20SFwoioq2JUrcAwyGwD_2WM

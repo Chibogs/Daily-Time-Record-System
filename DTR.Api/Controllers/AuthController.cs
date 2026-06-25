@@ -1,5 +1,5 @@
-using DTR.Api.DTOs;
-using DTR.Api.Services;
+using DTR.Application.DTOs;
+using DTR.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DTR.Api.Controllers;

@@ -1,6 +1,6 @@
 using System.Security.Claims;
-using DTR.Api.DTOs;
-using DTR.Api.Services;
+using DTR.Application.DTOs;
+using DTR.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -80,9 +80,9 @@ public class AttendanceController : ControllerBase
     }
 
     // GET /api/attendance/history
-    [HttpGet("history/{studentId}")]
+    [HttpGet("history")]
     [Authorize(Roles = "Student")]
-    public async Task<IActionResult> GetHistory(int studentId)
+    public async Task<IActionResult> GetHistory()
     {
         // [FromRoute] is inferred — studentId comes from the URL
         // GET /api/attendance/history/1
