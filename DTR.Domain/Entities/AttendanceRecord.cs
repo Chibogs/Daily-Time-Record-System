@@ -25,4 +25,13 @@ public class AttendanceRecord
     // Audit fields — standard in production systems
     // Tells you when the record was created, never changes after
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public string? StudentRemarks { get; set; }
+
+    public string? AdminRemarks { get; set; }
+
+    public int? ApprovedByAdminId { get; set; }
+
+    public DateTime? ApprovedAt { get; set; }
+
 }

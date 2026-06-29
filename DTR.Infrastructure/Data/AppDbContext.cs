@@ -34,6 +34,30 @@ public class AppDbContext : DbContext
             entity.Property(e => e.Status)
                   .IsRequired()
                   .HasMaxLength(20);
+            
+            entity.Property(e => e.StudentRemarks)
+                  .HasMaxLength(500);
+            
+            entity.Property(e => e.AdminRemarks)
+                  .HasMaxLength(500);
+              // FK — StudentId → users.Id
+              // "Ang bawat attendance record ay pag-aari ng isang user"
+            entity.HasOne<User>()
+                  .WithMany()
+                  .HasForeignKey(e => e.StudentId)
+                  .OnDelete(DeleteBehavior.Restrict);
+              // Restrict = kung ma-delete ang user
+              //            hindi automatic madelete ang records
+              //            mag-eerror para hindi mawala ang history
+
+              // FK — ApprovedByAdminId → users.Id
+              // "Ang nag-approve ay isang user (admin)"
+            entity.HasOne<User>()
+                  .WithMany()
+                  .HasForeignKey(e => e.ApprovedByAdminId)
+                  .IsRequired(false)  // nullable — pwedeng walang approver pa
+                  .OnDelete(DeleteBehavior.Restrict);
+
 
             // Index for faster queries — we'll frequently query by StudentId
             entity.HasIndex(e => e.StudentId);
