@@ -52,7 +52,7 @@ public class AttendanceService : IAttendanceService
         };
 
         var saved = await _repository.AddAsync(record);
-        return MapToResponse(saved);
+        return await MapToResponse(saved);
     }
 
     public async Task<AttendanceResponse> RequestTimeOut(int userId, string? remarks)
@@ -74,22 +74,39 @@ public class AttendanceService : IAttendanceService
         record.TimeOut = _dateTimeService.Now;
         record.TotalHours = (record.TimeOut.Value - record.TimeIn).TotalHours;
         record.Status = "Pending"; // Pending admin approval
+        record.StudentRemarks = remarks;
 
         // EF Core tracks changes automatically — SaveChanges() runs UPDATE
         await _repository.UpdateAsync(record);
-        return MapToResponse(record);
+        return await MapToResponse(record);
     }
 
     public async Task<IEnumerable<AttendanceResponse>> GetHistory(int studentId)
     {
         var records = await _repository.GetHistoryAsync(studentId);
-        return records.Select(r => MapToResponse(r));
+
+        var responses = new List<AttendanceResponse>();
+
+        foreach (var record in records)
+        {
+            responses.Add(await MapToResponse(record));
+        }
+
+        return responses;
     }
 
     // Private helper — maps Entity to DTO
     // Controller never sees the raw Entity
-    private static AttendanceResponse MapToResponse(AttendanceRecord record)
+    private async Task<AttendanceResponse> MapToResponse(AttendanceRecord record)
     {
+        string? approverName = null;
+
+        if (record.ApprovedByAdminId.HasValue)
+        {
+            // Fetch the admin's name from the database
+            var admin = await _userRepository.GetUserByIdAsync(record.ApprovedByAdminId.Value);
+            approverName = admin?.FullName;
+        }
         return new AttendanceResponse
         {
             Id = record.Id,
@@ -98,7 +115,11 @@ public class AttendanceService : IAttendanceService
             TimeIn = record.TimeIn,
             TimeOut = record.TimeOut,
             TotalHours = record.TotalHours,
-            Status = record.Status
+            Status = record.Status,
+            StudentRemarks = record.StudentRemarks,
+            AdminRemarks = record.AdminRemarks,
+            ApprovedByAdminName = approverName,
+            ApprovedAt = record.ApprovedAt
         };
     }
 }

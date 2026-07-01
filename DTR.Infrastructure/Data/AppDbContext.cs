@@ -42,8 +42,8 @@ public class AppDbContext : DbContext
                   .HasMaxLength(500);
               // FK — StudentId → users.Id
               // "Ang bawat attendance record ay pag-aari ng isang user"
-            entity.HasOne<User>()
-                  .WithMany()
+            entity.HasOne(r => r.Student)
+                  .WithMany(u => u.AttendanceRecords)
                   .HasForeignKey(e => e.StudentId)
                   .OnDelete(DeleteBehavior.Restrict);
               // Restrict = kung ma-delete ang user
@@ -52,7 +52,7 @@ public class AppDbContext : DbContext
 
               // FK — ApprovedByAdminId → users.Id
               // "Ang nag-approve ay isang user (admin)"
-            entity.HasOne<User>()
+            entity.HasOne(r => r.ApprovedByAdmin)
                   .WithMany()
                   .HasForeignKey(e => e.ApprovedByAdminId)
                   .IsRequired(false)  // nullable — pwedeng walang approver pa

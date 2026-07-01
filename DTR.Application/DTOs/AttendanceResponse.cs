@@ -17,4 +17,13 @@ public class AttendanceResponse
     public double? TotalHours { get; set; }
 
     public string Status { get; set; } = string.Empty; // "Present", "Pending", "Approved"
+
+    public string? StudentRemarks { get; set; }
+
+    public string? AdminRemarks { get; set; }
+
+    public string? ApprovedByAdminName { get; set; }
+
+    public DateTime? ApprovedAt { get; set; }
+
 }
