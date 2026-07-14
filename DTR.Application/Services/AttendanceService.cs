@@ -95,6 +95,18 @@ public class AttendanceService : IAttendanceService
         return responses;
     }
 
+    public async Task<AttendanceResponse> GetById(int recordId)
+    {
+        var record = await _repository.GetByIdAsync(recordId);
+
+        if (record == null)
+        {
+            throw new NotFoundException("Attendance record not found.");
+        }
+
+        return await MapToResponse(record);
+    }
+
     // Private helper — maps Entity to DTO
     // Controller never sees the raw Entity
     private async Task<AttendanceResponse> MapToResponse(AttendanceRecord record)

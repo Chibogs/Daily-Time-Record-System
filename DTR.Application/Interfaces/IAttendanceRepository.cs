@@ -11,6 +11,9 @@ public interface IAttendanceRepository
     // Get all records for a student, ordered by TimeIn descending
     Task<IEnumerable<AttendanceRecord>> GetHistoryAsync(int studentId);
 
+    // Get a record by its ID
+    Task<AttendanceRecord?> GetByIdAsync(int recordId);
+
     // Insert a new record into the database
     Task<AttendanceRecord> AddAsync(AttendanceRecord record);
 

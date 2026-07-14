@@ -33,6 +33,12 @@ public class AttendanceRepository : IAttendanceRepository
             .ToListAsync();
     }
 
+    public async Task<AttendanceRecord?> GetByIdAsync(int recordId)
+    {
+        return await _dbcontext.AttendanceRecords
+            .FirstOrDefaultAsync(r => r.Id == recordId);
+    }
+
     public async Task<AttendanceRecord> AddAsync(AttendanceRecord record)
     {
         // Add to DbContext tracking
