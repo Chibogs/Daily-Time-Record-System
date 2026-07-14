@@ -19,4 +19,6 @@ public interface IAttendanceRepository
 
     // Save changes to an existing tracked record
     Task UpdateAsync(AttendanceRecord record);
+
+    Task<IEnumerable<AttendanceRecord>> GetPendingRequestsAsync();
 }

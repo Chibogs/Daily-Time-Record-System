@@ -56,4 +56,13 @@ public class AttendanceRepository : IAttendanceRepository
         // EF Core already tracks this entity — just save changes
         await _dbcontext.SaveChangesAsync();
     }
+
+    // Get all pending attendance timeout records for admin review
+    public async Task<IEnumerable<AttendanceRecord>> GetPendingRequestsAsync()
+    {
+        return await _dbcontext.AttendanceRecords
+            .Where(r => r.Status == "Pending")
+            .OrderBy(r => r.TimeOut) // Optional: order by TimeOut for better admin review
+            .ToListAsync();
+    }
 }

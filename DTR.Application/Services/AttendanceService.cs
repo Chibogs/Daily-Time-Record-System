@@ -134,4 +134,60 @@ public class AttendanceService : IAttendanceService
             ApprovedAt = record.ApprovedAt
         };
     }
+
+    public async Task<IEnumerable<AttendanceResponse>> GetPendingTimeOutRequests()
+    {
+        var records = await _repository.GetPendingRequestsAsync();
+        var responses = new List<AttendanceResponse>();
+        foreach (var record in records)
+            responses.Add(await MapToResponse(record));
+        return responses;
+    }
+
+    public async Task<AttendanceResponse> ApproveTimeOutRequest(int recordId, int adminId, string? adminRemarks)
+    {
+        var record = await _repository.GetByIdAsync(recordId);
+
+        if (record == null)
+        {
+            throw new NotFoundException("Attendance record not found.");
+        }
+
+        if (record.Status != "Pending")
+        {
+            throw new ConflictException("Only pending requests can be approved.");
+        }
+
+        record.Status = "Approved";
+        record.ApprovedByAdminId = adminId;
+        record.ApprovedAt = _dateTimeService.Now;
+        record.AdminRemarks = adminRemarks;
+
+        await _repository.UpdateAsync(record);
+        return await MapToResponse(record);
+    }
+
+    public async Task<AttendanceResponse> RejectTimeOutRequest(int recordId, int adminId, string? adminRemarks)
+    {
+        var record = await _repository.GetByIdAsync(recordId);
+
+        if (record == null)
+        {
+            throw new NotFoundException("Attendance record not found.");
+        }
+
+        if (record.Status != "Pending")
+        {
+            throw new ConflictException("Only pending requests can be rejected.");
+        }
+
+        record.Status = "Rejected";
+        record.ApprovedByAdminId = adminId;
+        record.ApprovedAt = _dateTimeService.Now;
+        record.AdminRemarks = adminRemarks;
+
+        await _repository.UpdateAsync(record);
+        return await MapToResponse(record);
+    }
+
 }

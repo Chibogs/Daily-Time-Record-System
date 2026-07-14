@@ -12,4 +12,8 @@ public interface IAttendanceService
 
     // Returns all attendance records for a student
     Task<IEnumerable<AttendanceResponse>> GetHistory(int studentId);
+
+    Task<IEnumerable<AttendanceResponse>> GetPendingTimeOutRequests();
+    Task<AttendanceResponse> ApproveTimeOutRequest(int recordId, int adminId, string? adminRemarks);
+    Task<AttendanceResponse> RejectTimeOutRequest(int recordId, int adminId, string? adminRemarks);
 }
