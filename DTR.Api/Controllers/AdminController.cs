@@ -12,10 +12,12 @@ namespace DTR.Api.Controllers;
 public class AdminController : ControllerBase
 {
     private readonly IAttendanceService _attendanceService;
+    private readonly IUserService _userService;
 
-    public AdminController(IAttendanceService attendanceService)
+    public AdminController(IAttendanceService attendanceService, IUserService userService)
     {
         _attendanceService = attendanceService;
+        _userService = userService;
     }
 
     [HttpGet("pending-timeout-requests")]
@@ -45,5 +47,26 @@ public class AdminController : ControllerBase
         var adminId = int.Parse(adminIdClaim);
         var result = await _attendanceService.RejectTimeOutRequest(id, adminId, request.AdminRemarks);
         return Ok(result);
+    }
+
+    [HttpPost("create-user")]
+    public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
+    {
+        var result = await _userService.CreateUser(request);
+        return Ok(result);
+    }
+
+    [HttpPost("deactivate-user/{userId}")]
+    public async Task<IActionResult> DeactivateUser(int userId)
+    {
+        var result = await _userService.DeactivateUser(userId);
+        return Ok(result);
+    }
+
+    [HttpGet("all-users")]
+    public async Task<IActionResult> GetAllUsers()
+    {
+        var users = await _userService.GetAllUsers();
+        return Ok(users);
     }
 }

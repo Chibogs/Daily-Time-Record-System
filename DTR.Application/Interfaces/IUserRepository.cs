@@ -8,4 +8,10 @@ public interface IUserRepository
     Task<bool> VerifyPasswordAsync(User user, string password);
 
     Task<User?> GetUserByIdAsync(int userId);
+
+    Task<bool> UsernameExistsAsync(string username);
+    Task<User> CreateUserAsync(User user, string plainPassword);
+    Task UpdateUserAsync(User user);
+
+    Task<IEnumerable<User>> GetAllUsers();
 }

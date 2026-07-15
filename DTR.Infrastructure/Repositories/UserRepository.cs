@@ -32,4 +32,33 @@ public class UserRepository : IUserRepository
         // Use FirstOrDefaultAsync to find the user by ID
         return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
     }
+
+    public async Task<bool> UsernameExistsAsync(string username)
+    {
+        // Check if a user with the given username already exists
+        return await _context.Users.AnyAsync(u => u.Username == username);
+    }
+
+    public async Task<User> CreateUserAsync(User user, string plainPassword)
+    {
+        // Add the new user to the context and save changes
+
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(plainPassword); // Hash the password before saving
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+        return user;
+    }
+
+    public async Task UpdateUserAsync(User user)
+    {
+        // Update the user in the context and save changes
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<User>> GetAllUsers()
+    {
+        // Retrieve all users from the database
+        return await _context.Users.ToListAsync();
+    }
 }
