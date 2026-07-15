@@ -81,6 +81,9 @@ public class AppDbContext : DbContext
             entity.Property(e => e.FullName)
                   .IsRequired()
                   .HasMaxLength(100);
+            entity.Property(e => e.IsActive)
+                  .IsRequired()
+                  .HasDefaultValue(true); // Default value for IsActive is true
         });
 
     }

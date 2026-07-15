@@ -18,6 +18,8 @@ public class User
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    public bool IsActive { get; set; } = true;
+
     // Navigation property for the attendance records associated with the user
     // This allows for easy access to a user's attendance records when querying the database
     // one-to-many relationship: one user can have many attendance records

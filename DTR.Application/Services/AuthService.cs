@@ -31,6 +31,11 @@ public class AuthService : IAuthService
             return null;
         }
 
+        if (!user.IsActive)
+        {
+            return null; // User is inactive, cannot log in
+        }
+
         // Step 3 - Verify password
         var isPasswordValid = await _userRepository.VerifyPasswordAsync(user, request.Password);
 
