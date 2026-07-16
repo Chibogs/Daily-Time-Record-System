@@ -1,0 +1,43 @@
+services:
+  # PostgreSQL Database Container
+  db:
+    image: postgres:17 #Official PostgreSQL image from Docker Hub
+    container_name: dtr_postgres
+    environment:
+      POSTGRES_DB: dtr_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}  # use environment variable from .env file
+    ports:
+      - "5433:5432"  # host:container — 5433 para hindi mag-conflict sa local PostgreSQL
+    volumes:
+      - dtr_postgres_data:/var/lib/postgresql/data  # persist data #dito nakalagay ang database files para hindi mawala kahit i-stop ang container
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5 # Maximum number of retries for the health check
+
+  # ASP.NET Core API Container
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dtr_api
+    ports:
+      - "8080:8080"  # host:container
+    environment:
+      # Override appsettings.json — connect to db container, not localhost
+      ConnectionStrings__DefaultConnection: "Host=db;Port=5432;Database=dtr_db;Username=postgres;Password=${DB_PASSWORD}"
+      JwtSettings__SecretKey: ${JWT_SECRET_KEY}
+      JwtSettings__Issuer: "DTR.Api"
+      JwtSettings__Audience: "DTR.Client"
+      JwtSettings__ExpirationInMinutes: "60"
+      ASPNETCORE_ENVIRONMENT: "Development"
+    depends_on:
+      db:
+        condition: service_healthy  # hintayin muna ang database bago mag-start ang API
+    restart: on-failure
+
+# Named volume — para hindi mawala ang data kahit i-stop ang container
+volumes:
+  dtr_postgres_data:
