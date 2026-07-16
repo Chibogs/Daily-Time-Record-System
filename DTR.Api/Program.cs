@@ -5,6 +5,8 @@ using DTR.Infrastructure.Data;
 using DTR.Infrastructure.Repositories;
 using DTR.Infrastructure.Services;
 
+using DTR.Application.Settings;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -32,8 +34,12 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<IJwtService, JwtService>(); // JwtService is stateless — Singleton is correct here
 
+// Settings - Application layer
+// Option Pattern: Bind JwtSettings class to the "JwtSettings" section in appsettings.json
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));
+
 // JWT Authentication
-var secretKey = builder.Configuration["JwtSettings:SecretKey"]!;
+var jwtSettings = builder.Configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()!;
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -43,14 +49,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             // Validate the signature using our secret key
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(secretKey)),
+                Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
 
             // Validate issuer and audience match appsettings.json
             ValidateIssuer = true,
-            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+            ValidIssuer = jwtSettings.Issuer,
 
             ValidateAudience = true,
-            ValidAudience = builder.Configuration["JwtSettings:Audience"],
+            ValidAudience = jwtSettings.Audience,
 
             // Validate token has not expired
             ValidateLifetime = true,

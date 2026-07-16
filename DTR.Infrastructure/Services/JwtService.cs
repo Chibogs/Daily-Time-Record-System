@@ -2,34 +2,33 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using DTR.Application.Interfaces;
+using DTR.Application.Settings;
 using DTR.Domain.Entities;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DTR.Infrastructure.Services;
 
 public class JwtService : IJwtService
 {
-    private readonly IConfiguration _configuration;
+    private readonly JwtSettings _jwtSettings;
 
-    //Iconfiguration is injected to access appsettings.json
-    public JwtService(IConfiguration configuration)
+    // IOptions<JwtSettings> — dependency injection ang bahala
+    // na i-populate ito gamit ang binded configuration
+    public JwtService(IOptions<JwtSettings> options)
     {
-        _configuration = configuration;
+        _jwtSettings = options.Value;
     }
 
     public string GenerateToken(User user)
     {
 
     // Step 1: Retrieve JWT settings from configuration (appsettings.json)   
-    var secretKey = _configuration["JwtSettings:SecretKey"]!;
-    var issuer = _configuration["JwtSettings:Issuer"]!;
-    var audience = _configuration["JwtSettings:Audience"]!;
-    var expirationMinutes = int.Parse(_configuration["JwtSettings:ExpirationMinutes"]!);
+
 
     // Step 2: Create the signing key and credentials
 
-    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
     var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
     // Step 3: Define the claims for the JWT token (payload)
@@ -45,10 +44,10 @@ public class JwtService : IJwtService
     // Step 4: Create the JWT token
 
     var token = new JwtSecurityToken(
-        issuer: issuer,
-        audience: audience,
+        issuer: _jwtSettings.Issuer,
+        audience: _jwtSettings.Audience,
         claims: claims,
-        expires: DateTime.UtcNow.AddMinutes(expirationMinutes),
+        expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpirationInMinutes),
         signingCredentials: credentials
     );
 
