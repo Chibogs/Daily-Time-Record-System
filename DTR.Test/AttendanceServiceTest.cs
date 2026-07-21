@@ -11,7 +11,7 @@ namespace DTR.Test;
 public class AttendanceServiceTest
 {
     [Fact]
-    public async Task Test_AttendanceService_GenerateReport()
+    public async Task TimeIn_WhenNoActiveRecord_CreatesNewRecordWithPresentStatus()
     {
         // Arrange
 
