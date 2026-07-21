@@ -5,4 +5,5 @@
   <Project Path="DTR.Application/DTR.Application.csproj" />
   <Project Path="DTR.Domain/DTR.Domain.csproj" />
   <Project Path="DTR.Infrastructure/DTR.Infrastructure.csproj" />
+  <Project Path="DTR.Test/DTR.Test.csproj" />
 </Solution>
