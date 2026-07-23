@@ -16,7 +16,10 @@ public class AttendanceServiceTestExceptions
         // Arrange
         // Mock 1 - IAttendanceRepository
 
+        // Create a mock of IAttendanceRepository
         var mockAttendanceRepository = new Mock<IAttendanceRepository>();
+
+        // Create a sample existing attendance record to simulate an active record
         var existingRecord = new AttendanceRecord
         {
             Id = 1,
@@ -27,17 +30,19 @@ public class AttendanceServiceTestExceptions
             TimeOut = null,
         };
 
+        // Simulate that an active record already exists for the student
         mockAttendanceRepository
             .Setup(repo => repo.GetActiveRecordAsync(It.IsAny<int>(), It.IsAny<DateTime>()))
             .ReturnsAsync(existingRecord);
 
         // Act and Assert
+
+        // Create the AttendanceService with the mocked repository
         var service = new AttendanceService(
-            mockAttendanceRepository.Object,
-            Mock.Of<IDateTimeService>(),
-            Mock.Of<IUserRepository>());
+            mockAttendanceRepository.Object, // Use the mocked IAttendanceRepository 
+            Mock.Of<IDateTimeService>(), // Use a mock of IDateTimeService
+            Mock.Of<IUserRepository>()); // Use a mock of IUserRepository
         
         await Assert.ThrowsAsync<ConflictException>(() => service.TimeIn(2));
     }
 }
-// Simulate user not found
