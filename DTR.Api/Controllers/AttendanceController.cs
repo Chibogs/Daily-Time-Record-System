@@ -51,6 +51,9 @@ public class AttendanceController : ControllerBase
             return Unauthorized(new { error = "User ID claim not found" });
         }
 
+        // userID is stored as a string in the JWT token, so we need to convert it to an integer
+
+        // Convert the userId claim to an integer
         var userId = int.Parse(userIdClaim);
         var result = await _attendanceService.TimeIn(userId);
         return Ok(result);

@@ -18,9 +18,13 @@ public class UserRepository : IUserRepository
     public async Task<User?> GetByUsernameAsync(string username)
     {
         // Use FirstOrDefaultAsync to find the user by username
+
+        //returns user object if found, otherwise returns null
         return await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
     }
 
+    // Verify the password for a given user
+    // Notice meron two arguments: the user object and the plain text password to verify
     public async Task<bool> VerifyPasswordAsync(User user, string password)
     {
         // Use BCrypt to verify the password against the stored hash
