@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {login} from '../api/authApi';
+import { getToken, saveAuthToken } from '../services/authService';
 
 function LoginPage() {
     const [username, setUsername] = useState('');
@@ -11,7 +12,9 @@ function LoginPage() {
 
         try{
             const response = await login({ username, password });
-            console.log('Login successful:', response);
+            saveAuthToken(response);
+            console.log('Login successful:');
+            console.log(getToken());
             // Handle successful login, e.g., store token, redirect, etc.
         } catch (error) {
             console.error('Login failed:', error);
@@ -44,7 +47,6 @@ function LoginPage() {
         </form>
 
     )
-
     // Handle Login
 }
 
