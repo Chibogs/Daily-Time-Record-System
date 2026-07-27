@@ -29,5 +29,18 @@ export function logout(): void {
 }
 
 export function isAuthenticated(): boolean {
-    return !!getToken();
+    const user = getUser();
+
+    if (!user) {
+        return false;
+    }
+
+    const expiresAt = new Date(user.expiresAt);
+
+    if(expiresAt <= new Date()){
+        logout();
+        return false;
+    }
+    
+    return true;
 }
