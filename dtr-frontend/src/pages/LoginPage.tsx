@@ -2,11 +2,13 @@ import {useState} from 'react';
 import {login} from '../api/authApi';
 import { getToken, saveAuthToken } from '../services/authService';
 import {useNavigate} from 'react-router-dom';
+import {useAuth} from '../hooks/useAuth';
 
 function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+    const auth  = useAuth();
 
     async function handleLogin(event: React.SyntheticEvent<HTMLFormElement>) {
 
@@ -15,8 +17,15 @@ function LoginPage() {
         try{
             const response = await login({ username, password });
             saveAuthToken(response);
-            console.log('Login successful:');
-            console.log(getToken());
+
+            auth.login({
+                username: response.username,
+                fullName: response.fullName,
+                role: response.role,
+                expiresAt: response.expiresAt
+            });
+            // console.log('Login successful:');
+            // console.log(getToken());
             navigate('/dashboard');
             // Handle successful login, e.g., store token, redirect, etc.
         } catch (error) {
