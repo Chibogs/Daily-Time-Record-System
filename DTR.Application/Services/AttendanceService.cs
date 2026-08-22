@@ -167,6 +167,22 @@ public class AttendanceService : IAttendanceService
         return await MapToResponse(record);
     }
 
+    public async Task<AttendanceResponse> GetStatus(int studentId)
+    {
+        var record = await _repository.GetActiveRecordAsync(studentId, _dateTimeService.Today);
+
+        if (record == null)
+        {
+            return new AttendanceResponse
+            {
+                StudentId = studentId,
+                Status = "Not Timed In"
+            };
+        }
+
+        return await MapToResponse(record);
+    }
+
     public async Task<AttendanceResponse> RejectTimeOutRequest(int recordId, int adminId, string? adminRemarks)
     {
         var record = await _repository.GetByIdAsync(recordId);
