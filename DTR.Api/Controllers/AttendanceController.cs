@@ -77,9 +77,18 @@ public class AttendanceController : ControllerBase
 
     // GET /api/attendance/status
     [HttpGet("status")]
+    [Authorize(Roles = "Student")]
     public async Task<IActionResult> GetStatus()
     {
-        return Ok(new { status = "Present" });
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userIdClaim == null)
+        {
+            return Unauthorized();
+        }
+        var userId = int.Parse(userIdClaim);
+        var result = await _attendanceService.GetStatus(userId);
+        return Ok(result);
     }
 
     // GET /api/attendance/history

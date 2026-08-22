@@ -16,4 +16,5 @@ public interface IAttendanceService
     Task<IEnumerable<AttendanceResponse>> GetPendingTimeOutRequests();
     Task<AttendanceResponse> ApproveTimeOutRequest(int recordId, int adminId, string? adminRemarks);
     Task<AttendanceResponse> RejectTimeOutRequest(int recordId, int adminId, string? adminRemarks);
+    Task<AttendanceResponse> GetStatus(int studentId);
 }
