@@ -3,7 +3,7 @@ import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
 import ProtectedRoute from './routes/ProtectedRoute'
 import DashboardLayout from './layouts/DashboardLayout'
-import AttendancePage from './pages/Attendance'
+import AttendancePage from './pages/AttendancePage'
 import HistoryPage from './pages/HistoryPage'
 
 function App() {
