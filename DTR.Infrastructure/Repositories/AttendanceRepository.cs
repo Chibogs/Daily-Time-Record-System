@@ -25,6 +25,14 @@ public class AttendanceRepository : IAttendanceRepository
                 r.TimeOut == null);
     }
 
+    public async Task<AttendanceRecord?> GetTodayRecordAsync(int studentId, DateTime today)
+    {
+        return await _dbcontext.AttendanceRecords
+            .FirstOrDefaultAsync(r =>
+                r.StudentId == studentId &&
+                r.TimeIn.Date == today);
+    }
+    
     public async Task<IEnumerable<AttendanceRecord>> GetHistoryAsync(int studentId)
     {
         return await _dbcontext.AttendanceRecords

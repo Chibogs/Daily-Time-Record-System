@@ -8,6 +8,8 @@ public interface IAttendanceRepository
     // Returns null if none found
     Task<AttendanceRecord?> GetActiveRecordAsync(int studentId, DateTime today);
 
+    Task<AttendanceRecord?> GetTodayRecordAsync(int studentId, DateTime today);
+
     // Get all records for a student, ordered by TimeIn descending
     Task<IEnumerable<AttendanceRecord>> GetHistoryAsync(int studentId);
 
