@@ -112,6 +112,37 @@ export default function AttendancePage() {
                 </div>
             )}
 
+            {attendance?.status === "Pending" && (
+                <div className="mt-6 rounded border border-yellow-400 bg-yellow-50 p-4">
+                    <p className="font-medium text-yellow-800">
+                        Your time-out request is pending admin approval.
+                    </p>
+                </div>
+            )}
+
+            {attendance?.status === "Approved" && (
+                <div className="mt-6 rounded border border-green-400 bg-green-50 p-4">
+                    <p className="font-medium text-green-800">
+                        Your attendance has been approved.
+                    </p>
+                </div>
+            )}
+
+            {attendance?.status === "Rejected" && (
+                <div className="mt-6 rounded border border-red-400 bg-red-50 p-4">
+                    <p className="font-medium text-red-800">
+                        Your time-out request was rejected.
+                    </p>
+
+                    {attendance.adminRemarks && (
+                        <p className="mt-2">
+                            <strong>Admin Remarks:</strong>{" "}
+                            {attendance.adminRemarks}
+                        </p>
+                    )}
+                </div>
+            )}
+
             {attendance && (
                 <div className="mt-6 rounded border p-4">
                     <p>
