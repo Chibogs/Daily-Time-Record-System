@@ -22,7 +22,7 @@ public class AttendanceService : IAttendanceService
     public async Task<AttendanceResponse> TimeIn(int userId)
     {
         // Business Rule #1: Check if student already timed in today
-        var existingRecord = await _repository.GetActiveRecordAsync(userId, _dateTimeService.Today);
+        var existingRecord = await _repository.GetTodayRecordAsync(userId, _dateTimeService.Today);
 
 
         if (existingRecord != null)
@@ -169,7 +169,7 @@ public class AttendanceService : IAttendanceService
 
     public async Task<AttendanceResponse> GetStatus(int studentId)
     {
-        var record = await _repository.GetActiveRecordAsync(studentId, _dateTimeService.Today);
+        var record = await _repository.GetTodayRecordAsync(studentId, _dateTimeService.Today);
 
         if (record == null)
         {

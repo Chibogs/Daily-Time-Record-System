@@ -25,11 +25,6 @@ A simple attendance tracking web application for recording time-in and time-out 
 
 ## Getting Started
 
-```bash
-git clone <your-repository-url>
-cd "Daily Time Record System"
-```
-
 Create a `.env` file in the project root with:
 
 ```env
