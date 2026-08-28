@@ -7,6 +7,9 @@ export default function AdminAttendancePage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
+    // Stores the admin remark for each attendance record
+    const [remarks, setRemarks] = useState<Record<number, string>>({});
+
     useEffect(() => {
         loadRequests();
     }, []);
@@ -16,8 +19,7 @@ export default function AdminAttendancePage() {
             setLoading(true);
             setError(null);
 
-            const result =
-                await adminService.getPendingTimeoutRequests();
+            const result = await adminService.getPendingTimeoutRequests();
 
             setRequests(result);
         } catch (err) {
@@ -28,13 +30,25 @@ export default function AdminAttendancePage() {
         }
     };
 
+    const handleRemarkChange = (
+        id: number,
+        value: string
+    ) => {
+        setRemarks((prev) => ({
+            ...prev,
+            [id]: value,
+        }));
+    };
+
     const handleApprove = async (id: number) => {
         try {
-            await adminService.approve(id, {});
+            await adminService.approve(id, {
+                adminRemarks: remarks[id] || undefined,
+            });
 
             // Remove approved request from the pending list
-            setRequests((current) =>
-                current.filter((request) => request.id !== id)
+            setRequests((prev) =>
+                prev.filter((request) => request.id !== id)
             );
         } catch (err) {
             console.error(err);
@@ -44,11 +58,13 @@ export default function AdminAttendancePage() {
 
     const handleReject = async (id: number) => {
         try {
-            await adminService.reject(id, {});
+            await adminService.reject(id, {
+                adminRemarks: remarks[id] || undefined,
+            });
 
             // Remove rejected request from the pending list
-            setRequests((current) =>
-                current.filter((request) => request.id !== id)
+            setRequests((prev) =>
+                prev.filter((request) => request.id !== id)
             );
         } catch (err) {
             console.error(err);
@@ -57,7 +73,11 @@ export default function AdminAttendancePage() {
     };
 
     if (loading) {
-        return <p className="p-6">Loading pending requests...</p>;
+        return (
+            <div className="p-6">
+                Loading pending requests...
+            </div>
+        );
     }
 
     return (
@@ -73,18 +93,17 @@ export default function AdminAttendancePage() {
             )}
 
             {requests.length === 0 ? (
-                <p>No pending time-out requests.</p>
+                <p>No pending attendance requests.</p>
             ) : (
                 <div className="space-y-4">
                     {requests.map((request) => (
                         <div
                             key={request.id}
-                            className="rounded border p-4"
+                            className="rounded border p-5"
                         >
-                            <p>
-                                <strong>Student:</strong>{" "}
+                            <h2 className="mb-3 text-lg font-semibold">
                                 {request.studentName}
-                            </p>
+                            </h2>
 
                             <p>
                                 <strong>Time In:</strong>{" "}
@@ -93,12 +112,14 @@ export default function AdminAttendancePage() {
 
                             <p>
                                 <strong>Time Out:</strong>{" "}
-                                {request.timeOut}
+                                {request.timeOut ?? "N/A"}
                             </p>
 
                             <p>
                                 <strong>Total Hours:</strong>{" "}
-                                {request.totalHours?.toFixed(2)}
+                                {request.totalHours !== null
+                                    ? request.totalHours.toFixed(2)
+                                    : "N/A"}
                             </p>
 
                             <p>
@@ -107,29 +128,57 @@ export default function AdminAttendancePage() {
                             </p>
 
                             {request.studentRemarks && (
-                                <p>
-                                    <strong>Student Remarks:</strong>{" "}
+                                <p className="mt-2">
+                                    <strong>
+                                        Student Remarks:
+                                    </strong>{" "}
                                     {request.studentRemarks}
                                 </p>
                             )}
 
-                            <div className="mt-4 flex gap-2">
-                                <button
-                                    onClick={() =>
-                                        handleApprove(request.id)
-                                    }
-                                    className="rounded bg-green-600 px-4 py-2 text-white"
+                            {/* Admin Remarks */}
+                            <div className="mt-4">
+                                <label
+                                    htmlFor={`remarks-${request.id}`}
+                                    className="mb-2 block font-medium"
                                 >
-                                    Approve
-                                </button>
+                                    Admin Remarks
+                                </label>
 
+                                <textarea
+                                    id={`remarks-${request.id}`}
+                                    value={remarks[request.id] ?? ""}
+                                    onChange={(e) =>
+                                        handleRemarkChange(
+                                            request.id,
+                                            e.target.value
+                                        )
+                                    }
+                                    maxLength={250}
+                                    placeholder="Optional admin remarks..."
+                                    rows={3}
+                                    className="w-full max-w-md rounded border p-2"
+                                />
+                            </div>
+
+                            {/* Actions */}
+                            <div className="mt-4 flex gap-3">
                                 <button
                                     onClick={() =>
                                         handleReject(request.id)
                                     }
-                                    className="rounded bg-red-600 px-4 py-2 text-white"
+                                    className="rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700"
                                 >
                                     Reject
+                                </button>
+
+                                <button
+                                    onClick={() =>
+                                        handleApprove(request.id)
+                                    }
+                                    className="rounded bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+                                >
+                                    Approve
                                 </button>
                             </div>
                         </div>
