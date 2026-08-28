@@ -56,18 +56,20 @@ export default function Sidebar() {
                     </NavLink>
                 )}
 
-                {/* History */}
-                <NavLink
-                    to="/history"
-                    className={({ isActive }) =>
-                        `block rounded px-3 py-2 ${isActive
-                            ? "bg-slate-700"
-                            : "hover:bg-slate-800"
-                        }`
-                    }
-                >
-                    History
-                </NavLink>
+                {/* History Dashboard: role = Student */}
+                {user?.role === "Student" && (
+                    <NavLink
+                        to="/history"
+                        className={({ isActive }) =>
+                            `block rounded px-3 py-2 ${isActive
+                                ? "bg-slate-700"
+                                : "hover:bg-slate-800"
+                            }`
+                        }
+                    >
+                        History
+                    </NavLink>
+                )}
 
                 {/* Admin Dashboard: role = Admin */}
                 {user?.role === "Admin" && (
@@ -80,7 +82,7 @@ export default function Sidebar() {
                             }`
                         }
                     >
-                        Admin Attendance
+                        Attendance Requests
                     </NavLink>
                 )}
 
