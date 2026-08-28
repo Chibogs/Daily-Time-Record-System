@@ -5,6 +5,7 @@ import ProtectedRoute from './routes/ProtectedRoute'
 import DashboardLayout from './layouts/DashboardLayout'
 import AttendancePage from './pages/AttendancePage'
 import HistoryPage from './pages/HistoryPage'
+import AdminAttendancePage from './pages/AdminAttendancePage'
 
 function App() {
   return(
@@ -28,6 +29,11 @@ function App() {
               <Route
                 path="/history"
                 element={<HistoryPage />}
+              />
+
+              <Route
+                path="/admin/attendance"
+                element={<AdminAttendancePage />} 
               />
 
             </Route>

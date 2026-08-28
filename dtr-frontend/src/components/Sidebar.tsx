@@ -65,6 +65,20 @@ export default function Sidebar() {
                     History
                 </NavLink>
 
+                {user?.role === "Admin" && (
+                    <NavLink
+                        to="/admin/attendance"
+                        className={({ isActive }) =>
+                            `block rounded px-3 py-2 ${isActive
+                                ? "bg-slate-700"
+                                : "hover:bg-slate-800"
+                            }`
+                        }
+                    >
+                        Admin Attendance
+                    </NavLink>
+                )}
+
             </nav>
 
             {/* Logout */}
