@@ -3,8 +3,10 @@ import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
 import ProtectedRoute from './routes/ProtectedRoute'
 import DashboardLayout from './layouts/DashboardLayout'
-import AttendancePage from './pages/Attendance'
+import AttendancePage from './pages/AttendancePage'
 import HistoryPage from './pages/HistoryPage'
+import AdminAttendancePage from './pages/AdminAttendancePage'
+import RoleProtectedRoute from './components/RoleProtectedRoute'
 
 function App() {
   return(
@@ -20,15 +22,26 @@ function App() {
                 element={<DashboardPage />}
               />
 
-              <Route
+              <Route element={<RoleProtectedRoute allowedRoles={['Student']} />}>
+                <Route
                 path="/attendance"
-                element={<AttendancePage />}
-              />
+                  element={<AttendancePage />}
+                />
+              </Route>
 
-              <Route
+              <Route element={<RoleProtectedRoute allowedRoles={['Student']} />}>
+                <Route
                 path="/history"
                 element={<HistoryPage />}
               />
+              </Route>
+
+              <Route element={<RoleProtectedRoute allowedRoles={['Admin']} />}>
+                <Route
+                  path="/admin/attendance"
+                  element={<AdminAttendancePage />} 
+                />
+              </Route>
 
             </Route>
           </Route>

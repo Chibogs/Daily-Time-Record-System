@@ -41,29 +41,50 @@ export default function Sidebar() {
                     Dashboard
                 </NavLink>
 
-                <NavLink
-                    to="/attendance"
-                    className={({ isActive }) =>
-                        `block rounded px-3 py-2 ${isActive
-                            ? "bg-slate-700"
-                            : "hover:bg-slate-800"
-                        }`
-                    }
-                >
-                    Attendance
-                </NavLink>
+                {/* Attendance Dashboard: role = Student */}
+                {user?.role === "Student" && (
+                    <NavLink
+                        to="/attendance"
+                        className={({ isActive }) =>
+                            `block rounded px-3 py-2 ${isActive
+                                ? "bg-slate-700"
+                                : "hover:bg-slate-800"
+                            }`
+                        }
+                    >
+                        Attendance
+                    </NavLink>
+                )}
 
-                <NavLink
-                    to="/history"
-                    className={({ isActive }) =>
-                        `block rounded px-3 py-2 ${isActive
-                            ? "bg-slate-700"
-                            : "hover:bg-slate-800"
-                        }`
-                    }
-                >
-                    History
-                </NavLink>
+                {/* History Dashboard: role = Student */}
+                {user?.role === "Student" && (
+                    <NavLink
+                        to="/history"
+                        className={({ isActive }) =>
+                            `block rounded px-3 py-2 ${isActive
+                                ? "bg-slate-700"
+                                : "hover:bg-slate-800"
+                            }`
+                        }
+                    >
+                        History
+                    </NavLink>
+                )}
+
+                {/* Admin Dashboard: role = Admin */}
+                {user?.role === "Admin" && (
+                    <NavLink
+                        to="/admin/attendance"
+                        className={({ isActive }) =>
+                            `block rounded px-3 py-2 ${isActive
+                                ? "bg-slate-700"
+                                : "hover:bg-slate-800"
+                            }`
+                        }
+                    >
+                        Attendance Requests
+                    </NavLink>
+                )}
 
             </nav>
 
