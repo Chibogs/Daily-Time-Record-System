@@ -7,6 +7,7 @@ import AttendancePage from './pages/AttendancePage'
 import HistoryPage from './pages/HistoryPage'
 import AdminAttendancePage from './pages/AdminAttendancePage'
 import RoleProtectedRoute from './components/RoleProtectedRoute'
+import AdminUserManagementPage from './pages/AdminUserManagementPage'
 
 function App() {
   return(
@@ -27,19 +28,21 @@ function App() {
                 path="/attendance"
                   element={<AttendancePage />}
                 />
-              </Route>
 
-              <Route element={<RoleProtectedRoute allowedRoles={['Student']} />}>
                 <Route
-                path="/history"
-                element={<HistoryPage />}
-              />
+                  path="/history"
+                  element={<HistoryPage />}
+                />
               </Route>
 
               <Route element={<RoleProtectedRoute allowedRoles={['Admin']} />}>
                 <Route
                   path="/admin/attendance"
                   element={<AdminAttendancePage />} 
+                />
+                <Route
+                  path="/admin/users"
+                  element={<AdminUserManagementPage />}
                 />
               </Route>
 
