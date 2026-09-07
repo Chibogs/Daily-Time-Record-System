@@ -15,7 +15,7 @@ export const adminService = {
         return adminApi.reject(id, request);
     },
 
-    async creaeUser(request: {
+    async createUser(request: {
         username: string;
         password: string;
         fullName: string;
