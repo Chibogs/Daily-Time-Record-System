@@ -203,6 +203,25 @@ export default function AdminUserManagementPage() {
                             />
                         </div>
 
+                        <div className="mb-4">
+                            <label className="mb-1 block font-medium">
+                                Confirm Password
+                            </label>
+
+                            <input
+                                type="password"
+                                value={form.confirmPassword}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        confirmPassword: e.target.value,
+                                    })
+                                }
+                                required
+                                className="w-full max-w-md rounded border p-2"
+                            />
+                        </div>
+
                         {/* Full Name */}
                         <div>
                             <label
