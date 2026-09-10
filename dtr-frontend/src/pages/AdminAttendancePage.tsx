@@ -41,6 +41,13 @@ export default function AdminAttendancePage() {
     };
 
     const handleApprove = async (id: number) => {
+
+        const confirmed = window.confirm(
+            "Are you sure you want to approve this request?"
+        );
+
+        if (!confirmed) return;
+
         try {
             await adminService.approve(id, {
                 adminRemarks: remarks[id] || undefined,
@@ -57,6 +64,12 @@ export default function AdminAttendancePage() {
     };
 
     const handleReject = async (id: number) => {
+        const confirmed = window.confirm(
+            "Are you sure you want to reject this request?"
+        );
+
+        if (!confirmed) return;
+
         try {
             await adminService.reject(id, {
                 adminRemarks: remarks[id] || undefined,
