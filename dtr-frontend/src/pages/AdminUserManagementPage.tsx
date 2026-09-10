@@ -48,6 +48,13 @@ export default function AdminUserManagementPage() {
     };
 
     const handleDeactivate = async (userId: number) => {
+
+        const confirmed = window.confirm(
+            "Are you sure you want to deactivate this user?"
+        );
+        
+        if (!confirmed) return;
+
         try {
             setActionLoading(userId);
             setError(null);
