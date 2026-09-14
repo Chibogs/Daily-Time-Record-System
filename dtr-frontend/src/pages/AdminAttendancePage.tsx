@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { adminService } from "../services/adminService";
 import type { AttendanceResponse } from "../types/attendance";
+import { getErrorMessage } from "../utils/getErrorMessage";
 
 export default function AdminAttendancePage() {
     const [requests, setRequests] = useState<AttendanceResponse[]>([]);
@@ -24,7 +25,7 @@ export default function AdminAttendancePage() {
             setRequests(result);
         } catch (err) {
             console.error(err);
-            setError("Failed to load pending requests.");
+            setError(getErrorMessage(err, "Failed to load pending requests."));
         } finally {
             setLoading(false);
         }
@@ -59,7 +60,7 @@ export default function AdminAttendancePage() {
             );
         } catch (err) {
             console.error(err);
-            setError("Failed to approve request.");
+            setError(getErrorMessage(err, "Failed to approve request."));
         }
     };
 
@@ -81,7 +82,7 @@ export default function AdminAttendancePage() {
             );
         } catch (err) {
             console.error(err);
-            setError("Failed to reject request.");
+            setError(getErrorMessage(err, "Failed to reject request."));
         }
     };
 

@@ -42,7 +42,7 @@ export default function AdminUserManagementPage() {
             setUsers(result);
         } catch (err) {
             console.error(err);
-            setError("Failed to load users.");
+            setError(getErrorMessage(err, "Failed to load users."));
         } finally {
             setLoading(false);
         }
@@ -65,7 +65,7 @@ export default function AdminUserManagementPage() {
             await loadUsers();
         } catch (err) {
             console.error(err);
-            setError("Failed to deactivate user.");
+            setError(getErrorMessage(err, "Failed to deactivate user."));
         } finally {
             setActionLoading(null);
         }
@@ -75,13 +75,13 @@ export default function AdminUserManagementPage() {
         e.preventDefault();
 
         if (form.password !== form.confirmPassword) {
-            setError("Passwords do not match.");
+            setCreateError("Passwords do not match.");
             return;
         }
 
         try {
             setCreating(true);
-            setError(null);
+            setCreateError(null);
 
             await adminService.createUser({
                 username: form.username,
@@ -103,7 +103,7 @@ export default function AdminUserManagementPage() {
             await loadUsers();
         } catch (err) {
             console.error(err);
-            setError(getErrorMessage(err, "Failed to create user."));
+            setCreateError(getErrorMessage(err, "Failed to create user."));
         } finally {
             setCreating(false);
         }

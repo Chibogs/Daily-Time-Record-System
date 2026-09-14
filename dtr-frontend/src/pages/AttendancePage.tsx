@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { attendanceService } from "../services/attendanceService";
 import type { AttendanceResponse } from "../types/attendance";
+import {getErrorMessage} from "../utils/getErrorMessage";
 
 export default function AttendancePage() {
     const [attendance, setAttendance] =
@@ -20,7 +21,7 @@ export default function AttendancePage() {
                 setAttendance(result);
             } catch (err) {
                 console.error(err);
-                setError("Failed to load attendance status.");
+                setError(getErrorMessage(err, "Failed to load attendance status."));
             } finally {
                 setLoading(false);
             }
@@ -39,7 +40,7 @@ export default function AttendancePage() {
             setAttendance(result);
         } catch (err) {
             console.error(err);
-            setError("Failed to time in.");
+            setError(getErrorMessage(err, "Failed to time in."));
         } finally {
             setLoading(false);
         }
