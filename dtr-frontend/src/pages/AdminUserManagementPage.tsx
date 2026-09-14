@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { adminService } from "../services/adminService";
 import type { AdminUser } from "../types/admin";
+import { getErrorMessage } from "../utils/getErrorMessage";
 
 export default function AdminUserManagementPage() {
     const [users, setUsers] = useState<AdminUser[]>([]);
@@ -102,7 +103,7 @@ export default function AdminUserManagementPage() {
             await loadUsers();
         } catch (err) {
             console.error(err);
-            setError("Failed to create user.");
+            setError(getErrorMessage(err, "Failed to create user."));
         } finally {
             setCreating(false);
         }
