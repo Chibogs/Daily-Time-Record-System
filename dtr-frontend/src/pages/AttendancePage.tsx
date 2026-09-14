@@ -56,7 +56,7 @@ export default function AttendancePage() {
             setAttendance(result);
         } catch (err) {
             console.error(err);
-            setError("Failed to time out.");
+            setError(getErrorMessage(err, "Failed to time out."));
         } finally {
             setLoading(false);
         }
@@ -67,6 +67,12 @@ export default function AttendancePage() {
             <h1 className="mb-4 text-2xl font-bold">
                 Attendance
             </h1>
+
+            {loading && !attendance && (
+                <p className="mt-4 text-gray-600">
+                    Loading attendance...
+                </p>
+            )}
 
             {attendance?.status === "Not Timed In" && (
                 <button
