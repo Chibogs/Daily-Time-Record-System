@@ -343,11 +343,19 @@ export default function AdminUserManagementPage() {
                     </thead>
 
                     <tbody>
-
-                        {users.map((user) => (
-                            <tr key={user.id}>
-
-                                <td className="border p-3">
+                        {users.length === 0 ? (
+                            <tr>
+                                <td
+                                    colSpan={6}
+                                    className="border p-4 text-center text-gray-600"
+                                >
+                                    No users found.
+                                </td>
+                            </tr>
+                        ) : (
+                            users.map((user) => (
+                                <tr key={user.id}>
+                                    <td className="border p-3">
                                     {user.id}
                                 </td>
 
@@ -392,7 +400,14 @@ export default function AdminUserManagementPage() {
                                     )}
 
                                 </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                    <tbody>
 
+                        {users.map((user) => (
+                            <tr key={user.id}>
                             </tr>
                         ))}
 
