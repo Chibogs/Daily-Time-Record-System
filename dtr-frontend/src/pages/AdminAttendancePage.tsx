@@ -88,100 +88,113 @@ export default function AdminAttendancePage() {
 
     if (loading) {
         return (
-            <div className="p-6">
-                Loading pending requests...
+            <div className="admin-requests-page">
+                <section className="page-heading">
+                    <div>
+                        <p className="page-eyebrow">Administration</p>
+                        <h1>Attendance requests</h1>
+                        <p className="page-description">
+                            Review and process pending time-out requests.
+                        </p>
+                    </div>
+                </section>
+                <div className="loading-panel" role="status">
+                    <span className="loading-indicator" aria-hidden="true" />
+                    Loading pending requests...
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="p-6">
-            <h1 className="mb-6 text-2xl font-bold">
-                Attendance Requests
-            </h1>
+        <div className="admin-requests-page">
+            <section className="page-heading">
+                <div>
+                    <p className="page-eyebrow">Administration</p>
+                    <h1>Attendance requests</h1>
+                    <p className="page-description">
+                        Review and process pending time-out requests.
+                    </p>
+                </div>
+                <span className="request-count">
+                    {requests.length} pending
+                </span>
+            </section>
 
             {error && (
-                <p className="mb-4 text-red-600">
+                <p className="attendance-error" role="alert">
                     {error}
                 </p>
             )}
 
             {requests.length === 0 ? (
-                <p>No pending attendance requests.</p>
+                <div className="history-empty-state request-empty-state">
+                    <span className="empty-mark" aria-hidden="true">&#10003;</span>
+                    <h2>All requests are up to date</h2>
+                    <p>No pending attendance requests need your attention.</p>
+                </div>
             ) : (
-                <div className="space-y-4">
+                <div className="request-list">
                     {requests.map((request) => (
-                        <div
-                            key={request.id}
-                            className="rounded border p-5"
-                        >
-                            <h2 className="mb-3 text-lg font-semibold">
-                                {request.studentName}
-                            </h2>
-
-                            <p>
-                                <strong>Time In:</strong>{" "}
-                                {request.timeIn}
-                            </p>
-
-                            <p>
-                                <strong>Time Out:</strong>{" "}
-                                {request.timeOut ?? "N/A"}
-                            </p>
-
-                            <p>
-                                <strong>Total Hours:</strong>{" "}
-                                {request.totalHours !== null
-                                    ? request.totalHours.toFixed(2)
-                                    : "N/A"}
-                            </p>
-
-                            <p>
-                                <strong>Status:</strong>{" "}
-                                {request.status}
-                            </p>
-
-                            {request.studentRemarks && (
-                                <p className="mt-2">
-                                    <strong>
-                                        Student Remarks:
-                                    </strong>{" "}
-                                    {request.studentRemarks}
-                                </p>
-                            )}
-
-                            {/* Admin Remarks */}
-                            <div className="mt-4">
-                                <label
-                                    htmlFor={`remarks-${request.id}`}
-                                    className="mb-2 block font-medium"
-                                >
-                                    Admin Remarks
-                                </label>
-
-                                <textarea
-                                    id={`remarks-${request.id}`}
-                                    value={remarks[request.id] ?? ""}
-                                    onChange={(e) =>
-                                        handleRemarkChange(
-                                            request.id,
-                                            e.target.value
-                                        )
-                                    }
-                                    maxLength={250}
-                                    placeholder="Optional admin remarks..."
-                                    rows={3}
-                                    className="w-full max-w-md rounded border p-2"
-                                />
+                        <article key={request.id} className="request-card">
+                            <div className="request-card-heading">
+                                <div>
+                                    <p className="request-kicker">Time-out request</p>
+                                    <h2>{request.studentName}</h2>
+                                </div>
+                                <span className="history-status history-status-pending">
+                                    {request.status}
+                                </span>
                             </div>
 
-                            {/* Actions */}
-                            <div className="mt-4 flex gap-3">
+                            <div className="request-summary-grid">
+                                <div className="request-summary-item">
+                                    <span>Time in</span>
+                                    <strong>{request.timeIn}</strong>
+                                </div>
+                                <div className="request-summary-item">
+                                    <span>Time out</span>
+                                    <strong>{request.timeOut ?? "N/A"}</strong>
+                                </div>
+                                <div className="request-summary-item">
+                                    <span>Total hours</span>
+                                    <strong>{request.totalHours !== null ? request.totalHours.toFixed(2) : "N/A"}</strong>
+                                </div>
+                            </div>
+
+                            {request.studentRemarks && (
+                                <div className="student-remark">
+                                    <span>Student remarks</span>
+                                    <p>{request.studentRemarks}</p>
+                                </div>
+                            )}
+
+                            <div className="request-decision">
+                                <div className="request-remarks-field">
+                                    <label htmlFor={`remarks-${request.id}`}>
+                                        Admin remarks <span>(optional)</span>
+                                    </label>
+                                    <textarea
+                                        id={`remarks-${request.id}`}
+                                        value={remarks[request.id] ?? ""}
+                                        onChange={(e) =>
+                                            handleRemarkChange(
+                                                request.id,
+                                                e.target.value
+                                            )
+                                        }
+                                        maxLength={250}
+                                        placeholder="Add a note for the student..."
+                                        rows={3}
+                                    />
+                                </div>
+
+                                <div className="request-actions">
                                 <button
                                     onClick={() =>
                                         handleReject(request.id)
                                     }
-                                    className="rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+                                    className="request-reject-button"
                                 >
                                     Reject
                                 </button>
@@ -190,12 +203,13 @@ export default function AdminAttendancePage() {
                                     onClick={() =>
                                         handleApprove(request.id)
                                     }
-                                    className="rounded bg-green-600 px-4 py-2 text-white hover:bg-green-700"
+                                    className="request-approve-button"
                                 >
                                     Approve
                                 </button>
+                                </div>
                             </div>
-                        </div>
+                        </article>
                     ))}
                 </div>
             )}

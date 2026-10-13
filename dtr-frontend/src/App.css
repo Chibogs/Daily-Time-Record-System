@@ -1011,6 +1011,193 @@
   font-size: 13px;
 }
 
+.admin-requests-page {
+  width: 100%;
+}
+
+.request-count {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  padding: 0 12px;
+  border: 1px solid #fedf89;
+  border-radius: 999px;
+  color: var(--dtr-warning);
+  background: var(--dtr-warning-soft);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.request-empty-state .empty-mark {
+  color: var(--dtr-success);
+  background: var(--dtr-success-soft);
+}
+
+.request-list {
+  display: grid;
+  gap: 18px;
+  margin-top: 34px;
+}
+
+.request-card {
+  padding: 24px;
+  border: 1px solid var(--dtr-border);
+  border-radius: var(--dtr-radius-md);
+  background: var(--dtr-surface);
+  box-shadow: var(--dtr-shadow-sm);
+}
+
+.request-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.request-kicker {
+  margin: 0 0 7px;
+  color: var(--dtr-teal);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.request-card h2 {
+  margin: 0;
+  color: var(--dtr-ink);
+  font-size: 18px;
+}
+
+.request-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 22px;
+  overflow: hidden;
+  border: 1px solid var(--dtr-border);
+  border-radius: var(--dtr-radius-sm);
+  background: var(--dtr-border);
+}
+
+.request-summary-item {
+  display: grid;
+  min-height: 70px;
+  gap: 6px;
+  align-content: center;
+  padding: 12px 14px;
+  background: #fbfcfe;
+}
+
+.request-summary-item span,
+.student-remark > span {
+  color: var(--dtr-muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.request-summary-item strong {
+  color: var(--dtr-ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.student-remark {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-left: 3px solid #bde9e7;
+  background: #f7fbfb;
+}
+
+.student-remark p {
+  margin: 5px 0 0;
+  color: var(--dtr-ink);
+  font-size: 13px;
+}
+
+.request-decision {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--dtr-border);
+}
+
+.request-remarks-field {
+  display: grid;
+  width: min(100%, 430px);
+  gap: 8px;
+}
+
+.request-remarks-field label {
+  color: var(--dtr-ink);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.request-remarks-field label span {
+  color: var(--dtr-muted);
+  font-weight: 400;
+}
+
+.request-remarks-field textarea {
+  width: 100%;
+  resize: vertical;
+  padding: 10px 12px;
+  border: 1px solid var(--dtr-border-strong);
+  border-radius: var(--dtr-radius-sm);
+  color: var(--dtr-ink);
+  background: var(--dtr-surface);
+  font-size: 13px;
+}
+
+.request-remarks-field textarea:focus {
+  border-color: var(--dtr-teal);
+  outline: none;
+  box-shadow: 0 0 0 3px rgb(8 127 140 / 12%);
+}
+
+.request-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.request-reject-button,
+.request-approve-button {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid;
+  border-radius: var(--dtr-radius-sm);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.request-reject-button {
+  border-color: #fecdca;
+  color: var(--dtr-danger);
+  background: var(--dtr-danger-soft);
+}
+
+.request-reject-button:hover {
+  background: #fee4e2;
+}
+
+.request-approve-button {
+  border-color: var(--dtr-teal);
+  color: #ffffff;
+  background: var(--dtr-teal);
+}
+
+.request-approve-button:hover {
+  border-color: var(--dtr-teal-dark);
+  background: var(--dtr-teal-dark);
+}
+
 @media (max-width: 760px) {
   .app-sidebar {
     position: fixed;
@@ -1103,6 +1290,41 @@
 
   .history-count {
     margin-top: 16px;
+  }
+
+  .request-count {
+    margin-top: 16px;
+  }
+
+  .request-card {
+    padding: 20px;
+  }
+
+  .request-card-heading {
+    display: block;
+  }
+
+  .request-card-heading .history-status {
+    margin-top: 12px;
+  }
+
+  .request-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .request-decision {
+    display: grid;
+    align-items: stretch;
+    gap: 18px;
+  }
+
+  .request-remarks-field {
+    width: 100%;
+  }
+
+  .request-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 
   .attendance-action-panel {
