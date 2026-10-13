@@ -35,42 +35,57 @@ function LoginPage() {
 
     return(
 
-        <div className="flex min-h-screen items-center justify-center bg-gray-100 p-6">
-            <form onSubmit={handleLogin} className="w-full max-w-md rounded border bg-white p-6">
-                <h1 className="mb-6 text-2xl font-bold">
-                    Login
-                </h1>
+        <div className="login-page">
+            <div className="login-panel">
+                <section className="login-intro">
+                    <div className="login-mark" aria-hidden="true">D</div>
+                    <p className="login-kicker">DTR System</p>
+                    <h1>Keep every workday accounted for.</h1>
+                    <p className="login-description">
+                        A simple workspace for recording attendance, reviewing
+                        time entries, and keeping teams aligned.
+                    </p>
+                    <div className="login-rule" />
+                    <p className="login-note">Secure attendance workspace</p>
+                </section>
 
-                <div className="space-y-4">
-                    <div>
-                        <label className="mb-1 block font-medium">Username</label>
-
-                        <input
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            className="w-full max-w-md rounded border p-2"
-                        />
+                <form onSubmit={handleLogin} className="login-form">
+                    <div className="login-form-heading">
+                        <p className="form-eyebrow">Welcome back</p>
+                        <h2>Sign in to continue</h2>
+                        <p>Use your account credentials to access your dashboard.</p>
                     </div>
 
-                    <div>
-                        <label className="mb-1 block font-medium">Password</label>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full max-w-md rounded border p-2"
-                        />
-                    </div>
-                </div>
+                    <div className="login-fields">
+                        <div className="login-field">
+                            <label htmlFor="username">Username</label>
+                            <input
+                                id="username"
+                                type="text"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                autoComplete="username"
+                            />
+                        </div>
 
-                <button
-                    type="submit"
-                    className="mt-6 w-full rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-                >
-                    Login
-                </button>
-            </form>
+                        <div className="login-field">
+                            <label htmlFor="password">Password</label>
+                            <input
+                                id="password"
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                autoComplete="current-password"
+                            />
+                        </div>
+                    </div>
+
+                    <button type="submit" className="login-submit">
+                        Sign in
+                        <span aria-hidden="true">&#8594;</span>
+                    </button>
+                </form>
+            </div>
         </div>
 
     )
