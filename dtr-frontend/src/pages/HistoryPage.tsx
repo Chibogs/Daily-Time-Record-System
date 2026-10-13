@@ -35,56 +35,73 @@ export default function HistoryPage() {
 
     if (loading) {
         return (
-            <div className="p-6">
-                <h1 className="text-2xl font-bold">
-                    Attendance History
-                </h1>
-
-                <p className="mt-4 text-gray-600">
+            <div className="history-page">
+                <section className="page-heading">
+                    <div>
+                        <p className="page-eyebrow">Student workspace</p>
+                        <h1>Attendance history</h1>
+                        <p className="page-description">
+                            Review your previous attendance records and hours.
+                        </p>
+                    </div>
+                </section>
+                <div className="loading-panel" role="status">
+                    <span className="loading-indicator" aria-hidden="true" />
                     Loading attendance history...
-                </p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold">
-                Attendance History
-            </h1>
+        <div className="history-page">
+            <section className="page-heading">
+                <div>
+                    <p className="page-eyebrow">Student workspace</p>
+                    <h1>Attendance history</h1>
+                    <p className="page-description">
+                        Review your previous attendance records and hours.
+                    </p>
+                </div>
+                {history.length > 0 && (
+                    <span className="history-count">
+                        {history.length} {history.length === 1 ? "record" : "records"}
+                    </span>
+                )}
+            </section>
 
             {error && (
-                <p className="mt-4 text-red-600">
+                <p className="attendance-error" role="alert">
                     {error}
                 </p>
             )}
 
             {!error && history.length === 0 && (
-                <p className="mt-4 text-gray-600">
-                    No attendance records found.
-                </p>
+                <div className="history-empty-state">
+                    <span className="empty-mark" aria-hidden="true">--</span>
+                    <h2>No attendance records yet</h2>
+                    <p>Your completed attendance entries will appear here.</p>
+                </div>
             )}
 
             {history.length > 0 && (
-                <div className="mt-6 overflow-x-auto rounded border">
-                    <table className="w-full text-left">
-                        <thead className="border-b bg-gray-100">
+                <div className="history-table-wrap">
+                    <div className="history-table-scroll">
+                        <table className="history-table">
+                            <thead>
                             <tr>
-                                <th className="p-3">Date</th>
-                                <th className="p-3">Time In</th>
-                                <th className="p-3">Time Out</th>
-                                <th className="p-3">Total Hours</th>
-                                <th className="p-3">Status</th>
+                                <th>Date</th>
+                                <th>Time in</th>
+                                <th>Time out</th>
+                                <th>Total hours</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             {history.map((record) => (
-                                <tr
-                                    key={record.id}
-                                    className="border-b"
-                                >
-                                    <td className="p-3">
+                                    <tr key={record.id}>
+                                    <td className="history-date-cell">
                                         {record.timeIn
                                             ? new Date(
                                                   record.timeIn
@@ -92,7 +109,7 @@ export default function HistoryPage() {
                                             : "-"}
                                     </td>
 
-                                    <td className="p-3">
+                                    <td>
                                         {record.timeIn
                                             ? new Date(
                                                   record.timeIn
@@ -100,7 +117,7 @@ export default function HistoryPage() {
                                             : "-"}
                                     </td>
 
-                                    <td className="p-3">
+                                    <td>
                                         {record.timeOut
                                             ? new Date(
                                                   record.timeOut
@@ -108,19 +125,22 @@ export default function HistoryPage() {
                                             : "-"}
                                     </td>
 
-                                    <td className="p-3">
+                                    <td className="history-hours-cell">
                                         {record.totalHours !== null
                                             ? record.totalHours.toFixed(2)
                                             : "-"}
                                     </td>
 
-                                    <td className="p-3">
-                                        {record.status}
+                                    <td>
+                                        <span className={`history-status history-status-${record.status.toLowerCase()}`}>
+                                            {record.status}
+                                        </span>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
-                    </table>
+                        </table>
+                    </div>
                 </div>
             )}
         </div>
