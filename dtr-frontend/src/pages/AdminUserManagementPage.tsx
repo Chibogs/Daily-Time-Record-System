@@ -111,64 +111,67 @@ export default function AdminUserManagementPage() {
 
     if (loading) {
         return (
-            <div className="p-6">
-                <h1 className="mb-6 text-2xl font-bold">
-                    User Management
-                </h1>
-
-                <p>Loading users...</p>
+            <div className="users-page">
+                <section className="page-heading">
+                    <div>
+                        <p className="page-eyebrow">Administration</p>
+                        <h1>User management</h1>
+                        <p className="page-description">
+                            Manage accounts and workspace access.
+                        </p>
+                    </div>
+                </section>
+                <div className="loading-panel" role="status">
+                    <span className="loading-indicator" aria-hidden="true" />
+                    Loading users...
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="p-6">
-
-            <div className="mb-6 flex items-center justify-between">
-                <h1 className="text-2xl font-bold">
-                    User Management
-                </h1>
+        <div className="users-page">
+            <section className="page-heading">
+                <div>
+                    <p className="page-eyebrow">Administration</p>
+                    <h1>User management</h1>
+                    <p className="page-description">
+                        Manage accounts and workspace access.
+                    </p>
+                </div>
 
                 <button
+                    type="button"
                     onClick={() => {
                         setShowCreateForm(!showCreateForm);
                         setCreateError(null);
                     }}
-                    className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                    className="create-user-button"
                 >
-                    {showCreateForm
-                        ? "Cancel"
-                        : "Create User"}
+                    <span aria-hidden="true">{showCreateForm ? "-" : "+"}</span>
+                    {showCreateForm ? "Close form" : "Create user"}
                 </button>
-            </div>
+            </section>
 
-            {/* Create User Form */}
             {showCreateForm && (
-                <div className="mb-6 rounded border p-6">
-
-                    <h2 className="mb-4 text-xl font-bold">
-                        Create User
-                    </h2>
+                <section className="create-user-panel">
+                    <div className="create-user-heading">
+                        <div>
+                            <p className="page-eyebrow">New account</p>
+                            <h2>Create a user</h2>
+                        </div>
+                        <p>Set up login credentials and assign a workspace role.</p>
+                    </div>
 
                     {createError && (
-                        <p className="mb-4 text-red-600">
+                        <p className="attendance-error" role="alert">
                             {createError}
                         </p>
                     )}
 
-                    <form
-                        onSubmit={handleCreateUser}
-                        className="space-y-4"
-                    >
-
-                        {/* Username */}
-                        <div>
-                            <label
-                                htmlFor="username"
-                                className="mb-1 block font-medium"
-                            >
-                                Username
-                            </label>
+                    <form onSubmit={handleCreateUser} className="create-user-form">
+                        <div className="user-form-field">
+                            <label htmlFor="username">Username</label>
 
                             <input
                                 id="username"
@@ -177,23 +180,15 @@ export default function AdminUserManagementPage() {
                                 onChange={(e) =>
                                     setForm({
                                         ...form,
-                                        username:
-                                            e.target.value,
+                                        username: e.target.value,
                                     })
                                 }
                                 required
-                                className="w-full max-w-md rounded border p-2"
                             />
                         </div>
 
-                        {/* Password */}
-                        <div>
-                            <label
-                                htmlFor="password"
-                                className="mb-1 block font-medium"
-                            >
-                                Password
-                            </label>
+                        <div className="user-form-field">
+                            <label htmlFor="password">Password</label>
 
                             <input
                                 id="password"
@@ -202,21 +197,18 @@ export default function AdminUserManagementPage() {
                                 onChange={(e) =>
                                     setForm({
                                         ...form,
-                                        password:
-                                            e.target.value,
+                                        password: e.target.value,
                                     })
                                 }
                                 required
-                                className="w-full max-w-md rounded border p-2"
                             />
                         </div>
 
-                        <div className="mb-4">
-                            <label className="mb-1 block font-medium">
-                                Confirm Password
-                            </label>
+                        <div className="user-form-field">
+                            <label htmlFor="confirmPassword">Confirm password</label>
 
                             <input
+                                id="confirmPassword"
                                 type="password"
                                 value={form.confirmPassword}
                                 onChange={(e) =>
@@ -226,18 +218,11 @@ export default function AdminUserManagementPage() {
                                     })
                                 }
                                 required
-                                className="w-full max-w-md rounded border p-2"
                             />
                         </div>
 
-                        {/* Full Name */}
-                        <div>
-                            <label
-                                htmlFor="fullName"
-                                className="mb-1 block font-medium"
-                            >
-                                Full Name
-                            </label>
+                        <div className="user-form-field">
+                            <label htmlFor="fullName">Full name</label>
 
                             <input
                                 id="fullName"
@@ -246,23 +231,15 @@ export default function AdminUserManagementPage() {
                                 onChange={(e) =>
                                     setForm({
                                         ...form,
-                                        fullName:
-                                            e.target.value,
+                                        fullName: e.target.value,
                                     })
                                 }
                                 required
-                                className="w-full max-w-md rounded border p-2"
                             />
                         </div>
 
-                        {/* Role */}
-                        <div>
-                            <label
-                                htmlFor="role"
-                                className="mb-1 block font-medium"
-                            >
-                                Role
-                            </label>
+                        <div className="user-form-field">
+                            <label htmlFor="role">Role</label>
 
                             <select
                                 id="role"
@@ -270,11 +247,9 @@ export default function AdminUserManagementPage() {
                                 onChange={(e) =>
                                     setForm({
                                         ...form,
-                                        role:
-                                            e.target.value,
+                                        role: e.target.value,
                                     })
                                 }
-                                className="w-full max-w-md rounded border p-2"
                             >
                                 <option value="Student">
                                     Student
@@ -286,136 +261,90 @@ export default function AdminUserManagementPage() {
                             </select>
                         </div>
 
-                        {/* Submit */}
                         <button
                             type="submit"
                             disabled={creating}
-                            className="rounded bg-green-600 px-4 py-2 text-white disabled:opacity-50"
+                            className="create-submit-button"
                         >
-                            {creating
-                                ? "Creating..."
-                                : "Create User"}
+                            {creating ? "Creating..." : "Create user"}
                         </button>
-
                     </form>
-                </div>
+                </section>
             )}
 
-            {/* General Error */}
             {error && (
-                <p className="mb-4 text-red-600">
+                <p className="attendance-error" role="alert">
                     {error}
                 </p>
             )}
 
-            {/* Users Table */}
-            <div className="overflow-x-auto">
-                <table className="w-full border-collapse border">
+            <section className="users-table-wrap">
+                <div className="users-table-heading">
+                    <div>
+                        <p className="page-eyebrow">Directory</p>
+                        <h2>Workspace users</h2>
+                    </div>
+                    <span className="user-count">
+                        {users.length} {users.length === 1 ? "user" : "users"}
+                    </span>
+                </div>
 
-                    <thead>
+                <div className="users-table-scroll">
+                    <table className="users-table">
+                        <thead>
                         <tr className="bg-slate-100">
-
-                            <th className="border p-3 text-left">
-                                ID
-                            </th>
-
-                            <th className="border p-3 text-left">
-                                Username
-                            </th>
-
-                            <th className="border p-3 text-left">
-                                Full Name
-                            </th>
-
-                            <th className="border p-3 text-left">
-                                Role
-                            </th>
-
-                            <th className="border p-3 text-left">
-                                Status
-                            </th>
-
-                            <th className="border p-3 text-left">
-                                Action
-                            </th>
-
+                            <th>ID</th>
+                            <th>Username</th>
+                            <th>Full name</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         {users.length === 0 ? (
                             <tr>
-                                <td
-                                    colSpan={6}
-                                    className="border p-4 text-center text-gray-600"
-                                >
+                                <td colSpan={6} className="users-empty-cell">
                                     No users found.
                                 </td>
                             </tr>
                         ) : (
                             users.map((user) => (
                                 <tr key={user.id}>
-                                    <td className="border p-3">
-                                    {user.id}
-                                </td>
-
-                                <td className="border p-3">
-                                    {user.username}
-                                </td>
-
-                                <td className="border p-3">
-                                    {user.fullName}
-                                </td>
-
-                                <td className="border p-3">
-                                    {user.role}
-                                </td>
-
-                                <td className="border p-3">
-                                    {user.isActive
-                                        ? "Active"
-                                        : "Inactive"}
-                                </td>
-
-                                <td className="border p-3">
-
-                                    {user.isActive && (
-                                        <button
-                                            onClick={() =>
-                                                handleDeactivate(
-                                                    user.id
-                                                )
-                                            }
-                                            disabled={
-                                                actionLoading ===
-                                                user.id
-                                            }
-                                            className="rounded bg-red-600 px-3 py-1 text-white disabled:opacity-50"
-                                        >
-                                            {actionLoading ===
-                                                user.id
-                                                ? "Processing..."
-                                                : "Deactivate"}
-                                        </button>
-                                    )}
-
-                                </td>
+                                    <td className="user-id-cell">{user.id}</td>
+                                    <td className="user-username-cell">{user.username}</td>
+                                    <td className="user-name-cell">{user.fullName}</td>
+                                    <td>
+                                        <span className={`user-role user-role-${user.role.toLowerCase()}`}>
+                                            {user.role}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span className={`user-status ${user.isActive ? "user-status-active" : "user-status-inactive"}`}>
+                                            <span className="user-status-dot" aria-hidden="true" />
+                                            {user.isActive ? "Active" : "Inactive"}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {user.isActive && (
+                                            <button
+                                                type="button"
+                                                onClick={() => handleDeactivate(user.id)}
+                                                disabled={actionLoading === user.id}
+                                                className="deactivate-button"
+                                            >
+                                                {actionLoading === user.id ? "Processing..." : "Deactivate"}
+                                            </button>
+                                        )}
+                                    </td>
                                 </tr>
                             ))
                         )}
                     </tbody>
-                    <tbody>
-
-                        {users.map((user) => (
-                            <tr key={user.id}>
-                            </tr>
-                        ))}
-
-                    </tbody>
-
-                </table>
-            </div>
-
+                    </table>
+                </div>
+            </section>
         </div>
     );
 }
