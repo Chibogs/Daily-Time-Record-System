@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { AuthContext } from "./AuthContext";
 import type { AuthUser } from "../types/user";
 import {
@@ -15,15 +15,10 @@ interface Props {
 
 export function AuthProvider({ children }: Props) {
 
-    const [user, setUser] = useState<AuthUser | null>(null);
-
-    useEffect(() => {
-
-        if (isAuthenticated()) {
-            setUser(getUser());
-        }
-
-    }, []);
+    // Read persisted auth during initialization so the first render has the correct user.
+    const [user, setUser] = useState<AuthUser | null>(() =>
+        isAuthenticated() ? getUser() : null
+    );
 
     function login(user: AuthUser) {
         setUser(user);

@@ -11,10 +11,6 @@ export default function AdminAttendancePage() {
     // Stores the admin remark for each attendance record
     const [remarks, setRemarks] = useState<Record<number, string>>({});
 
-    useEffect(() => {
-        loadRequests();
-    }, []);
-
     const loadRequests = async () => {
         try {
             setLoading(true);
@@ -30,6 +26,16 @@ export default function AdminAttendancePage() {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        // Defer the stateful loader to avoid a synchronous state update inside the effect.
+        const loadTimer = window.setTimeout(() => {
+            void loadRequests();
+        }, 0);
+
+        // Do not start the request if the page unmounts before the scheduled load runs.
+        return () => window.clearTimeout(loadTimer);
+    }, []);
 
     const handleRemarkChange = (
         id: number,

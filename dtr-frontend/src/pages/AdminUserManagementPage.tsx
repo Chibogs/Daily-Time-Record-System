@@ -28,10 +28,6 @@ export default function AdminUserManagementPage() {
         role: "Student",
     });
 
-    useEffect(() => {
-        loadUsers();
-    }, []);
-
     const loadUsers = async () => {
         try {
             setLoading(true);
@@ -47,6 +43,16 @@ export default function AdminUserManagementPage() {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        // Defer the stateful loader to avoid a synchronous state update inside the effect.
+        const loadTimer = window.setTimeout(() => {
+            void loadUsers();
+        }, 0);
+
+        // Do not start the request if the page unmounts before the scheduled load runs.
+        return () => window.clearTimeout(loadTimer);
+    }, []);
 
     const handleDeactivate = async (userId: number) => {
 
