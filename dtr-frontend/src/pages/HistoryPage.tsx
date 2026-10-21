@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { attendanceService } from "../services/attendanceService";
 import type { AttendanceResponse } from "../types/attendance";
 import { getErrorMessage } from "../utils/getErrorMessage";
+import { formatDurationHours } from "../utils/formatDurationHours";
 
 export default function HistoryPage() {
     const [history, setHistory] = useState<AttendanceResponse[]>([]);
@@ -126,9 +127,7 @@ export default function HistoryPage() {
                                     </td>
 
                                     <td className="history-hours-cell">
-                                        {record.totalHours !== null
-                                            ? record.totalHours.toFixed(2)
-                                            : "-"}
+                                        {formatDurationHours(record.totalHours)}
                                     </td>
 
                                     <td>
