@@ -9,7 +9,7 @@ function DashboardPage() {
     <div className="dashboard-page">
       <section className="page-heading dashboard-heading">
         <div>
-          <p className="page-eyebrow">Overview</p>
+          <p className="page-eyebrow">Dashboard</p>
           <h1>Good day, {auth.user?.fullName}.</h1>
           <p className="page-description">
             {isStudent
@@ -20,23 +20,36 @@ function DashboardPage() {
       </section>
 
       <section className="dashboard-hero" aria-label="Workspace summary">
-        <div>
-          <p className="dashboard-hero-label">Your workspace</p>
-          <h2>{isStudent ? 'Ready to record today?' : 'Keep the day moving.'}</h2>
+        <div className="dashboard-hero-main">
+          <p className="dashboard-hero-label">{isStudent ? 'Attendance workspace' : 'Administration workspace'}</p>
+          <h2>{isStudent ? 'Your daily time record, in one place.' : 'Manage attendance with confidence.'}</h2>
           <p>
             {isStudent
-              ? 'Use the attendance workspace to record your time in and time out.'
-              : 'Review requests and keep user records organized from the admin tools.'}
+              ? 'Record today\'s attendance and keep track of your submitted time records.'
+              : 'Review attendance requests and maintain user access from your workspace.'}
           </p>
+          <NavLink to={isStudent ? '/attendance' : '/admin/attendance'} className="dashboard-primary-link">
+            {isStudent ? 'Open attendance' : 'Review requests'}
+            <span aria-hidden="true">&#8594;</span>
+          </NavLink>
         </div>
-        <div className="dashboard-hero-mark" aria-hidden="true">DTR</div>
+        <div className="dashboard-hero-aside">
+          <span className="dashboard-hero-aside-label">Signed in as</span>
+          <strong>{isStudent ? 'Student' : 'Administrator'}</strong>
+          <span className="dashboard-hero-aside-rule" aria-hidden="true" />
+          <span className="dashboard-hero-aside-note">
+            {isStudent ? 'Personal attendance records' : 'Attendance and user management'}
+          </span>
+        </div>
       </section>
 
       <section className="dashboard-section">
         <div className="section-heading">
           <div>
             <p className="page-eyebrow">Quick access</p>
+            <h2>Common tasks</h2>
           </div>
+          <p className="dashboard-section-note">Choose a workspace to continue</p>
         </div>
 
         <div className="action-grid">
@@ -46,7 +59,7 @@ function DashboardPage() {
                 <span className="action-number">01</span>
                 <span className="action-copy">
                   <strong>Record attendance</strong>
-                  <span>Time in, time out, and review today&apos;s status.</span>
+                  <span>Record time in or out and review today&apos;s status.</span>
                 </span>
                 <span className="action-arrow" aria-hidden="true">&#8594;</span>
               </NavLink>
@@ -65,7 +78,7 @@ function DashboardPage() {
                 <span className="action-number">01</span>
                 <span className="action-copy">
                   <strong>Review attendance requests</strong>
-                  <span>Approve or reject pending time-out requests.</span>
+                  <span>Review and respond to pending time-out requests.</span>
                 </span>
                 <span className="action-arrow" aria-hidden="true">&#8594;</span>
               </NavLink>
