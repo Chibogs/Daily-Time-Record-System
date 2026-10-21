@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { adminService } from "../services/adminService";
 import type { AttendanceResponse } from "../types/attendance";
 import { getErrorMessage } from "../utils/getErrorMessage";
+import { formatAttendanceDateTime } from "../utils/formatAttendanceDateTime";
 
 export default function AdminAttendancePage() {
     const [requests, setRequests] = useState<AttendanceResponse[]>([]);
@@ -156,11 +157,11 @@ export default function AdminAttendancePage() {
                             <div className="request-summary-grid">
                                 <div className="request-summary-item">
                                     <span>Time in</span>
-                                    <strong>{request.timeIn}</strong>
+                                    <strong>{formatAttendanceDateTime(request.timeIn)}</strong>
                                 </div>
                                 <div className="request-summary-item">
                                     <span>Time out</span>
-                                    <strong>{request.timeOut ?? "N/A"}</strong>
+                                    <strong>{formatAttendanceDateTime(request.timeOut)}</strong>
                                 </div>
                                 <div className="request-summary-item">
                                     <span>Total hours</span>
